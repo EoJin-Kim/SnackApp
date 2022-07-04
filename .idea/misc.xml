@@ -3,13 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.33" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.18796296296296297" />
         <entry key="..\:/and/SnackApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.217" />
         <entry key="..\:/and/SnackApp/app/src/main/res/drawable/splash.xml" value="0.2955" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
