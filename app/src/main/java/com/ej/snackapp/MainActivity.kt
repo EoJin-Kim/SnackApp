@@ -26,6 +26,19 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var mainActivityBinding: ActivityMainBinding
 
+
+    init{
+        instance = this
+    }
+
+    companion object{
+        private var instance:MainActivity? = null
+        fun getInstance(): MainActivity? {
+            return instance
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.ServerInfo
 import com.ej.snackapp.UserSnackInfo
+import com.ej.snackapp.adapter.SnackPickRecyclerAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
 import com.ej.snackapp.databinding.SnackPickRowBinding
 import okhttp3.OkHttpClient
@@ -25,14 +26,23 @@ import kotlin.concurrent.thread
 
 class PickSnackFragment : Fragment() {
 
-
     lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding
 
+//    val nameList = arrayOf(
+//        "홍길동1","홍길동2","홍길동3","홍길동4","홍길동5","홍길동6","홍길동7","홍길동8"
+//    )
+    var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
 
-    val nameList = arrayOf(
-        "홍길동1","홍길동2","홍길동3","홍길동4","홍길동5","홍길동6","홍길동7","홍길동8"
-    )
-    var filterUserSnackInfoList = ArrayList<UserSnackInfo>()
+    init{
+        instance = this
+    }
+
+    companion object{
+        private var instance:PickSnackFragment? = null
+        fun getInstance(): PickSnackFragment? {
+            return instance
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +59,18 @@ class PickSnackFragment : Fragment() {
         pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
 
 
-        getUserSnackList()
+        getUserSnackList(true)
 
         val snackPickRecyclerAdapter = SnackPickRecyclerAdapter()
+        snackPickRecyclerAdapter.filterUserSnackInfoList = filterUserSnackInfoList
+        snackPickRecyclerAdapter.act = act
         pickSnackFragmentBinding.pickSnackRecycler.adapter = snackPickRecyclerAdapter
 
         pickSnackFragmentBinding.pickSnackRecycler.layoutManager = LinearLayoutManager(requireContext())
 //        pickSnackFragmentBinding.nameInput.setAdapter()
 
         pickSnackFragmentBinding.snackSwipe.setOnRefreshListener{
-            getUserSnackList()
+            getUserSnackList(true)
             pickSnackFragmentBinding.nameInput.setText("")
 
             val inputMethodManager = act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -102,67 +114,11 @@ class PickSnackFragment : Fragment() {
 
 
 
-    //  RecyclerView의 Adapter 클래스
-    inner class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.ViewHolderClass>(){
 
-        // 항목 구성을 위해 사용할 ViewHolder 객체가 필요할 떄 호출되는 메서드
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderClass {
-            // 항목으로 사용할 View 객체를 생성한다.
-            val snackPickRowBinding = SnackPickRowBinding.inflate(layoutInflater)
-            val holder = ViewHolderClass(snackPickRowBinding)
-            val layoutParams = RecyclerView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
 
-            snackPickRowBinding.root.layoutParams = layoutParams
-            snackPickRowBinding.root.setOnClickListener(holder)
-
-            return holder
-        }
-
-        // ViewHolder를 통해 항목을 구성할 떄 항목 내의 View 객체에 데이터를 셋팅한다.
-        override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
-
-            val userInfo = filterUserSnackInfoList[position]
-
-            holder.snackPickName.text = userInfo.name
-
-            if(userInfo.food=="" || userInfo.food==null){
-                holder.snackPickDessertBtn.text = "간식을 선택해주세요"
-            }
-            else{
-                holder.snackPickDessertBtn.text = "${userInfo.food} : ${userInfo.foodOption}"
-            }
-
-            if(userInfo.food=="" || userInfo.food==null){
-                holder.snackPickDrinkBtn.text = "음료를 선택해주세요"
-            }
-            else{
-                holder.snackPickDrinkBtn.text = "${userInfo.drink} : ${userInfo.drinkOption}"
-            }
-        }
-
-        // RecyclerView 항목 개수를 반한
-        override fun getItemCount(): Int {
-            return filterUserSnackInfoList.size
-        }
-
-        //ViewHolder 클래스
-        inner class ViewHolderClass(snackPickRowBinding: SnackPickRowBinding) : RecyclerView.ViewHolder(snackPickRowBinding.root),View.OnClickListener {
-            // 항목 View 내부의 View 객체의 주소값을 담는다
-            val snackPickName = snackPickRowBinding.snackPickName
-            val snackPickDessertBtn = snackPickRowBinding.snackPickDessertBtn
-            val snackPickDrinkBtn = snackPickRowBinding.snackPickDrinkBtn
-
-            override fun onClick(v: View?) {
-//                textView.text = data1[adapterPosition]
-                pickSnack(adapterPosition)
-            }
-        }
-    }
-
-    fun getUserSnackList(){
+    fun getUserSnackList(filter:Boolean){
+        val act = activity as MainActivity
+        act.UserSnackInfoList.clear()
         filterUserSnackInfoList.clear()
 
 
@@ -206,6 +162,7 @@ class PickSnackFragment : Fragment() {
         }
     }
     fun pickSnack(idx:Int){
+        var memberInfo = filterUserSnackInfoList[idx]
 
     }
 }
