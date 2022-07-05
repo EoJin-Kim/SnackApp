@@ -9,17 +9,22 @@ import com.ej.snackapp.databinding.ActivityMainBinding
 import com.ej.snackapp.fragment.PickShopFragment
 import com.ej.snackapp.fragment.PickSnackFragment
 import com.ej.snackapp.fragment.ResultSnackFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
     val pickSnackFragment = PickSnackFragment()
     val resultSnackFragment = ResultSnackFragment()
     val pickShopFragment = PickShopFragment()
+    val fragList = arrayOf(pickSnackFragment, resultSnackFragment, pickShopFragment)
 
-    val fragList = arrayOf(pickSnackFragment,resultSnackFragment,pickShopFragment)
+    val tabNameList = arrayOf("Today Snack", "Result Snack", "Pick Shop")
+
+    val UserSnackInfoList = ArrayList<UserSnackInfo>()
 
 
-    lateinit var mainActivityBinding : ActivityMainBinding
+    lateinit var mainActivityBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(mainActivityBinding.root)
 
-        setActionBar(mainActivityBinding.toolbar)
-        
-        val adapter1 = object : FragmentStateAdapter(this){
+
+        val adapter1 = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
                 return fragList.size
             }
@@ -44,5 +48,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainActivityBinding.pager2.adapter = adapter1
+
+        // tab과 viewpager를 연결한다다
+        TabLayoutMediator(
+            mainActivityBinding.tabs,
+            mainActivityBinding.pager2
+        ) { tab: TabLayout.Tab, i: Int ->
+            tab.text = tabNameList[i]
+
+        }.attach()
     }
+
 }
