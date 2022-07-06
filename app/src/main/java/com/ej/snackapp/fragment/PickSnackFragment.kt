@@ -30,8 +30,7 @@ class PickSnackFragment : Fragment() {
 //    )
     var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
 
-    var foodShopDetailInfoList = mutableListOf<ShopDetailInfo>()
-    var drinkShopDetailInfoList = mutableListOf<ShopDetailInfo>()
+
 
     init{
         instance = this
@@ -59,12 +58,12 @@ class PickSnackFragment : Fragment() {
         pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
 
         getUserSnackList(true)
-        getShopDetailInfo()
+
 
         val userPickRecyclerAdapter = UserPickRecyclerAdapter()
         userPickRecyclerAdapter.filterUserSnackInfoList = filterUserSnackInfoList
-        userPickRecyclerAdapter.drinkShopDetailInfoList = drinkShopDetailInfoList
-        userPickRecyclerAdapter.foodShopDetailInfoList = foodShopDetailInfoList
+        userPickRecyclerAdapter.drinkShopDetailInfoList = act.drinkShopDetailInfoList
+        userPickRecyclerAdapter.foodShopDetailInfoList = act.foodShopDetailInfoList
 
         pickSnackFragmentBinding.pickSnackRecycler.adapter = userPickRecyclerAdapter
 
@@ -168,76 +167,5 @@ class PickSnackFragment : Fragment() {
         }
     }
 
-    fun getShopDetailInfo(){
-        val act = activity as MainActivity
-        foodShopDetailInfoList.clear()
-        drinkShopDetailInfoList.clear()
-        thread {
 
-            val client = OkHttpClient()
-
-            while(act.nowFoodId==-1){
-                SystemClock.sleep(500)
-            }
-            val url = "${ServerInfo.SERVER_URL}/api/shop/FOOD/${act.nowFoodId}"
-
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            if (response.isSuccessful) {
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
-
-
-                val data = root.getJSONObject("data")
-                val shopName = data.getString("shopName")
-                val snackType = data.getString("snackType")
-                val menuURI = data.getString("menuURI")
-                val snackListData = data.getJSONArray("snackList")
-                val snackList = ArrayList<String>()
-                for (i in 0 until snackListData.length()) {
-                    val snackName = snackListData.get(i).toString()
-                    snackList.add(snackName)
-                }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
-                foodShopDetailInfoList.add(shopDetailInfo)
-            }
-
-        }
-
-        thread {
-
-            val client = OkHttpClient()
-
-            while(act.nowDrinkId==-1){
-                SystemClock.sleep(500)
-            }
-
-            val url = "${ServerInfo.SERVER_URL}/api/shop/DRINK/${act.nowDrinkId}"
-
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            if (response.isSuccessful) {
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
-
-
-                val data = root.getJSONObject("data")
-                val shopName = data.getString("shopName")
-                val snackType = data.getString("snackType")
-                val menuURI = data.getString("menuURI")
-                val snackListData = data.getJSONArray("snackList")
-                val snackList = ArrayList<String>()
-                for (i in 0 until snackListData.length()) {
-                    val snackName = snackListData.get(i).toString()
-                    snackList.add(snackName)
-                }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
-                drinkShopDetailInfoList.add(shopDetailInfo)
-            }
-        }
-    }
 }
