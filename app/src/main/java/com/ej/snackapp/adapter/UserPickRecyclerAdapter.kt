@@ -1,23 +1,27 @@
 package com.ej.snackapp.adapter
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
-import com.ej.snackapp.ServerInfo
+import com.ej.snackapp.R
+import com.ej.snackapp.ShopDetailInfo
 import com.ej.snackapp.UserSnackInfo
 import com.ej.snackapp.databinding.SnackPickRowBinding
 import com.ej.snackapp.fragment.PickSnackFragment
 
 //  RecyclerView의 Adapter 클래스
-class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.ViewHolderClass>(){
+class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.ViewHolderClass>(){
 
+//    var mainActivity: MainActivity? = null
     var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
-
-
-    lateinit var act : MainActivity
+    var foodShopDetailInfoList = mutableListOf<ShopDetailInfo>()
+    var drinkShopDetailInfoList = mutableListOf<ShopDetailInfo>()
 
 
     // 항목 구성을 위해 사용할 ViewHolder 객체가 필요할 떄 호출되는 메서드
@@ -27,6 +31,7 @@ class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.V
         val snackPickRowBinding = SnackPickRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         val holder = ViewHolderClass(snackPickRowBinding)
+        holder.context = parent.context
         val layoutParams = RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -41,7 +46,10 @@ class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.V
     // ViewHolder를 통해 항목을 구성할 떄 항목 내의 View 객체에 데이터를 셋팅한다.
     override fun onBindViewHolder(holder: ViewHolderClass, position: Int) {
 
+
         val userInfo = filterUserSnackInfoList[position]
+
+//        holder.mainActivity = mainActivity
 
         holder.idx = position
 
@@ -74,8 +82,9 @@ class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.V
     inner class ViewHolderClass(snackPickRowBinding: SnackPickRowBinding) : RecyclerView.ViewHolder(snackPickRowBinding.root),
         View.OnClickListener {
 
-        private val mainActivity = MainActivity.getInstance()
-        private val pickSnackFragment = PickSnackFragment.getInstance()
+        var mainActivity: MainActivity? = null
+        private var pickSnackFragment : PickSnackFragment? = null
+        var context:Context? = null
 
         // 항목 View 내부의 View 객체의 주소값을 담는다
 
@@ -88,7 +97,28 @@ class SnackPickRecyclerAdapter : RecyclerView.Adapter<SnackPickRecyclerAdapter.V
         val snackPickDrinkBtn = snackPickRowBinding.snackPickDrinkBtn
 
         init {
+
+            pickSnackFragment = PickSnackFragment.getInstance()
+
             snackPickRowBinding.snackPickDessertBtn.setOnClickListener {
+
+                val layoutInflater = LayoutInflater.from(context)
+                val view = layoutInflater.inflate(R.layout.alert_dialog,null)
+                val alertDialog = AlertDialog.Builder(context!!)
+                    .setView(view)
+                    .create()
+
+                val foodTypeText = view.findViewById<TextView>(R.id.snack_type)
+                val confirmButton = view.findViewById<View>(R.id.choice_btn)
+
+                foodTypeText.text = mainActivity?.nowFoodType
+                confirmButton.setOnClickListener{
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+
+
+
                 Log.d("test","${snackPickName.text}")
             }
 
