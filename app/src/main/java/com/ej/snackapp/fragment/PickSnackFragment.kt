@@ -1,6 +1,5 @@
 package com.ej.snackapp.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -16,12 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.*
-import com.ej.snackapp.adapter.SnackRecyclerAdapter
+import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.adapter.UserPickAdapter
-import com.ej.snackapp.adapter.UserPickRecyclerAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
 import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.data.UserSnackInfo
+import com.ej.snackapp.info.ShopDetailInfo
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
@@ -64,13 +63,14 @@ class PickSnackFragment : Fragment() {
 //
 //        pickSnackFragmentBinding.pickSnackRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        val funVal : (UserSnackInfo) -> Unit = { userSnackInfo -> adapterOnClick(userSnackInfo) }
-        val funBtnVal : () -> String = {  -> adapterButtonOnClick() }
-        val userPickAdapter = UserPickAdapter(funVal,funBtnVal)
+
+        val snackPickAdapter = createSnackPickAdapter(act.foodShopDetailInfo!!)
+        val userPickAdapter = createUserPickAdapter(act.userSnackInfoList,snackPickAdapter)
+
         val recyclerView = pickSnackFragmentBinding.pickSnackRecycler
         recyclerView.adapter = userPickAdapter
 
-        userPickAdapter.submitList(act.userSnackInfoList)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         pickSnackFragmentBinding.snackSwipe.setOnRefreshListener{
@@ -116,12 +116,32 @@ class PickSnackFragment : Fragment() {
 
     }
 
-    private fun adapterOnClick(userSnackInfo: UserSnackInfo){
+    private fun createSnackPickAdapter(foodShopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
+        val funVal : (String) -> Unit = { str ->snackPickAdapterOnClick(str) }
+        val snackPickAdapter = SnackPickAdapter(funVal)
+        snackPickAdapter.submitList(foodShopDetailInfo.snackList)
+
+        return snackPickAdapter
+    }
+
+    private fun createUserPickAdapter(userSnackInfoList: ArrayList<UserSnackInfo>,snackPickAdapter: SnackPickAdapter): UserPickAdapter {
+        val funVal: (UserSnackInfo) -> Unit = { userSnackInfo -> userPickAdapterNameOnClick(userSnackInfo) }
+        val funBtnVal: () -> String = { -> userPickAdapterButtonOnClick(snackPickAdapter) }
+        val userPickAdapter = UserPickAdapter(funVal, funBtnVal)
+        userPickAdapter.submitList(userSnackInfoList)
+        return userPickAdapter
+    }
+
+    private fun snackPickAdapterOnClick(snackName : String){
+        Log.d("onclick",snackName)
+    }
+
+    private fun userPickAdapterNameOnClick(userSnackInfo: UserSnackInfo){
 
         Log.d("onclick","name click")
     }
 
-    private fun adapterButtonOnClick() : String{
+    private fun userPickAdapterButtonOnClick(snackPickAdapter: SnackPickAdapter) : String{
         val act = activity as MainActivity
         Log.d("onclick","btn click")
 
@@ -137,7 +157,12 @@ class PickSnackFragment : Fragment() {
         val confirmButton = view.findViewById<View>(R.id.choice_btn)
 
 
-//        snackRecycler.adapter = snackRecyclerAdapter
+//        val funVal : (String) -> Unit = { str ->snackPickAdapterOnClick(str) }
+//        val snackPickAdapter = SnackPickAdapter(funVal)
+//        snackPickAdapter.submitList(act.foodShopDetailInfo?.snackList)
+
+
+        snackRecycler.adapter = snackPickAdapter
         snackRecycler.layoutManager = LinearLayoutManager(context)
 
         shopNameText.text = act.nowFoodType
