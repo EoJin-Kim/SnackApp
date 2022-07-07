@@ -1,8 +1,8 @@
 package com.ej.snackapp.fragment
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -11,10 +11,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.*
+import com.ej.snackapp.adapter.SnackRecyclerAdapter
+import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.adapter.UserPickRecyclerAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
+import com.ej.snackapp.info.ServerInfo
+import com.ej.snackapp.data.UserSnackInfo
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
@@ -25,23 +32,8 @@ class PickSnackFragment : Fragment() {
 
     lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding
 
-//    val nameList = arrayOf(
-//        "홍길동1","홍길동2","홍길동3","홍길동4","홍길동5","홍길동6","홍길동7","홍길동8"
-//    )
     var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
 
-
-
-    init{
-        instance = this
-    }
-
-    companion object{
-        private var instance:PickSnackFragment? = null
-        fun getInstance(): PickSnackFragment? {
-            return instance
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,15 +52,26 @@ class PickSnackFragment : Fragment() {
         getUserSnackList(true)
 
 
-        val userPickRecyclerAdapter = UserPickRecyclerAdapter()
-        userPickRecyclerAdapter.filterUserSnackInfoList = filterUserSnackInfoList
-        userPickRecyclerAdapter.drinkShopDetailInfoList = act.drinkShopDetailInfoList
-        userPickRecyclerAdapter.foodShopDetailInfoList = act.foodShopDetailInfoList
+//        val userPickRecyclerAdapter = UserPickRecyclerAdapter()
+//
+//        userPickRecyclerAdapter.filterUserSnackInfoList = filterUserSnackInfoList
+//        userPickRecyclerAdapter.foodShopName = act.nowFoodType
+//        userPickRecyclerAdapter.drinkShopName = act.nowDrinkType
+//        userPickRecyclerAdapter.drinkShopDetailInfo = act.drinkShopDetailInfo
+//        userPickRecyclerAdapter.foodShopDetailInfo = act.foodShopDetailInfo
+//
+//        pickSnackFragmentBinding.pickSnackRecycler.adapter = userPickRecyclerAdapter
+//
+//        pickSnackFragmentBinding.pickSnackRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        pickSnackFragmentBinding.pickSnackRecycler.adapter = userPickRecyclerAdapter
+        val funVal : (UserSnackInfo) -> Unit = { userSnackInfo -> adapterOnClick(userSnackInfo) }
+        val funBtnVal : () -> String = {  -> adapterButtonOnClick() }
+        val userPickAdapter = UserPickAdapter(funVal,funBtnVal)
+        val recyclerView = pickSnackFragmentBinding.pickSnackRecycler
+        recyclerView.adapter = userPickAdapter
 
-        pickSnackFragmentBinding.pickSnackRecycler.layoutManager = LinearLayoutManager(requireContext())
-//        pickSnackFragmentBinding.nameInput.setAdapter()
+        userPickAdapter.submitList(act.userSnackInfoList)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         pickSnackFragmentBinding.snackSwipe.setOnRefreshListener{
             getUserSnackList(true)
@@ -113,10 +116,36 @@ class PickSnackFragment : Fragment() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun adapterOnClick(userSnackInfo: UserSnackInfo){
+
+        Log.d("onclick","name click")
+    }
+
+    private fun adapterButtonOnClick() : String{
+        val act = activity as MainActivity
+        Log.d("onclick","btn click")
+
+        val layoutInflater = LayoutInflater.from(context)
+        val view = layoutInflater.inflate(R.layout.alert_dialog,null)
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(view)
+            .create()
+
+        val snackRecycler = view.findViewById<RecyclerView>(R.id.snack_recycler)
+        val shopNameText = view.findViewById<TextView>(R.id.shop_name)
+        val selectSnack = view.findViewById<TextView>(R.id.select_snack)
+        val confirmButton = view.findViewById<View>(R.id.choice_btn)
 
 
+//        snackRecycler.adapter = snackRecyclerAdapter
+        snackRecycler.layoutManager = LinearLayoutManager(context)
+
+        shopNameText.text = act.nowFoodType
+        confirmButton.setOnClickListener{
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
+        return "btn!!"
     }
 
 

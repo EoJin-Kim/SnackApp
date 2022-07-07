@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.R
-import com.ej.snackapp.ShopDetailInfo
-import com.ej.snackapp.UserSnackInfo
+import com.ej.snackapp.info.ShopDetailInfo
+import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.databinding.SnackPickRowBinding
 import com.ej.snackapp.fragment.PickSnackFragment
 
@@ -20,8 +21,10 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
 
 //    var mainActivity: MainActivity? = null
     var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
-    var foodShopDetailInfoList = mutableListOf<ShopDetailInfo>()
-    var drinkShopDetailInfoList = mutableListOf<ShopDetailInfo>()
+    var foodShopName : String? = null
+    var drinkShopName : String? = null
+    var foodShopDetailInfo : ShopDetailInfo? = null
+    var drinkShopDetailInfo : ShopDetailInfo? = null
 
 
     // 항목 구성을 위해 사용할 ViewHolder 객체가 필요할 떄 호출되는 메서드
@@ -50,6 +53,10 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
         val userInfo = filterUserSnackInfoList[position]
 
 //        holder.mainActivity = mainActivity
+        holder.foodShopName = foodShopName
+        holder.drinkShopName = drinkShopName
+        holder.foodShopDetailInfo = foodShopDetailInfo
+        holder.drinkShopDetailInfo = drinkShopDetailInfo
 
         holder.idx = position
 
@@ -59,17 +66,17 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
         holder.snackPickName.text = userInfo.name
 
         if(userInfo.food=="" || userInfo.food==null){
-            holder.snackPickDessertBtn.text = "간식을 선택해주세요"
+            holder.pickFoodBtn.text = "간식을 선택해주세요"
         }
         else{
-            holder.snackPickDessertBtn.text = "${userInfo.food} : ${userInfo.foodOption}"
+            holder.pickFoodBtn.text = "${userInfo.food} : ${userInfo.foodOption}"
         }
 
         if(userInfo.food=="" || userInfo.food==null){
-            holder.snackPickDrinkBtn.text = "음료를 선택해주세요"
+            holder.pickDrinkBtn.text = "음료를 선택해주세요"
         }
         else{
-            holder.snackPickDrinkBtn.text = "${userInfo.drink} : ${userInfo.drinkOption}"
+            holder.pickDrinkBtn.text = "${userInfo.drink} : ${userInfo.drinkOption}"
         }
     }
 
@@ -79,28 +86,33 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
     }
 
     //ViewHolder 클래스
-    inner class ViewHolderClass(snackPickRowBinding: SnackPickRowBinding) : RecyclerView.ViewHolder(snackPickRowBinding.root),
-        View.OnClickListener {
+    inner class ViewHolderClass(snackPickRowBinding: SnackPickRowBinding) : RecyclerView.ViewHolder(snackPickRowBinding.root), View.OnClickListener {
 
         var mainActivity: MainActivity? = null
         private var pickSnackFragment : PickSnackFragment? = null
         var context:Context? = null
 
         // 항목 View 내부의 View 객체의 주소값을 담는다
+        var foodShopName : String? = null
+        var drinkShopName : String? = null
+
+        var foodShopDetailInfo : ShopDetailInfo? = null
+        var drinkShopDetailInfo : ShopDetailInfo? = null
 
         var idx:Int = -1
 
         var userId:Int = 0
 
         val snackPickName = snackPickRowBinding.snackPickName
-        val snackPickDessertBtn = snackPickRowBinding.snackPickDessertBtn
-        val snackPickDrinkBtn = snackPickRowBinding.snackPickDrinkBtn
+        val pickFoodBtn = snackPickRowBinding.pickFoodBtn
+        val pickDrinkBtn = snackPickRowBinding.pickDrinkBtn
 
         init {
 
-            pickSnackFragment = PickSnackFragment.getInstance()
 
-            snackPickRowBinding.snackPickDessertBtn.setOnClickListener {
+            pickFoodBtn.setOnClickListener {
+
+
 
                 val layoutInflater = LayoutInflater.from(context)
                 val view = layoutInflater.inflate(R.layout.alert_dialog,null)
@@ -108,10 +120,21 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
                     .setView(view)
                     .create()
 
-                val foodTypeText = view.findViewById<TextView>(R.id.snack_type)
+                val snackRecycler = view.findViewById<RecyclerView>(R.id.snack_recycler)
+                val shopNameText = view.findViewById<TextView>(R.id.shop_name)
+                val selectSnack = view.findViewById<TextView>(R.id.select_snack)
                 val confirmButton = view.findViewById<View>(R.id.choice_btn)
 
-                foodTypeText.text = mainActivity?.nowFoodType
+                val snackRecyclerAdapter = SnackRecyclerAdapter(textView = selectSnack) { snack ->
+                    Log.d("alert", "snack=$snack")
+                    selectSnack.text = snack
+                }
+                snackRecyclerAdapter.shopDetailInfo = foodShopDetailInfo
+
+                snackRecycler.adapter = snackRecyclerAdapter
+                snackRecycler.layoutManager = LinearLayoutManager(context)
+
+                shopNameText.text = foodShopName
                 confirmButton.setOnClickListener{
                     alertDialog.dismiss()
                 }
@@ -122,9 +145,13 @@ class UserPickRecyclerAdapter : RecyclerView.Adapter<UserPickRecyclerAdapter.Vie
                 Log.d("test","${snackPickName.text}")
             }
 
-            snackPickRowBinding.snackPickDrinkBtn.setOnClickListener {
+            pickDrinkBtn.setOnClickListener {
 
             }
+
+        }
+
+        private fun onClickSnack(snack: String){
 
         }
         override fun onClick(v: View?) {

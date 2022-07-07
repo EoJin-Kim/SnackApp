@@ -5,21 +5,38 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/snack_type"
+        android:id="@+id/shop_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/main_pink"
-        android:text="간식 종류"
+        android:text="가게 이름"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/main_background" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/select_snack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="간식 선택"
         android:textAlignment="center" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/snack_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/choice_btn"

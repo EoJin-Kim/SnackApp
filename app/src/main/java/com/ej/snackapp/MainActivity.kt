@@ -9,13 +9,16 @@ import com.ej.snackapp.databinding.ActivityMainBinding
 import com.ej.snackapp.fragment.PickShopFragment
 import com.ej.snackapp.fragment.PickSnackFragment
 import com.ej.snackapp.fragment.ResultSnackFragment
+import com.ej.snackapp.info.ServerInfo
+import com.ej.snackapp.info.ShopDetailInfo
+import com.ej.snackapp.info.ShopInfo
+import com.ej.snackapp.data.UserSnackInfo
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,22 +41,11 @@ class MainActivity : AppCompatActivity() {
     var nowDrinkType = ""
 
 
-    var foodShopDetailInfoList = mutableListOf<ShopDetailInfo>()
-    var drinkShopDetailInfoList = mutableListOf<ShopDetailInfo>()
+    var foodShopDetailInfo : ShopDetailInfo? = null
+    var drinkShopDetailInfo : ShopDetailInfo? = null
 
     lateinit var mainActivityBinding: ActivityMainBinding
 
-
-    init{
-        instance = this
-    }
-
-    companion object{
-        private var instance:MainActivity? = null
-        fun getInstance(): MainActivity? {
-            return instance
-        }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +57,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("crt","nowFoodId : ${nowFoodId}")
         Log.d("crt","nowDrinkId: ${nowDrinkId}")
         apiInit2()
-        Log.d("crt","foodShopDetailInfoList.size : ${foodShopDetailInfoList.size}")
-        Log.d("crt","drinkShopInfoList.size : ${drinkShopDetailInfoList.size}")
+        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.size}")
+        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.size}")
 
         nowSnackSet()
 
@@ -123,9 +115,7 @@ class MainActivity : AppCompatActivity() {
             job1.join()
             job2.join()
             job3.join()
-
         }
-
     }
     fun apiInit2(){
         val job4 = GlobalScope.launch(Dispatchers.Default){
@@ -256,7 +246,7 @@ class MainActivity : AppCompatActivity() {
 
     fun getFoodShopDetailInfo() : Deferred<Unit>{
 
-        foodShopDetailInfoList.clear()
+
 
         var result = CoroutineScope(Dispatchers.Default).async {
 
@@ -284,7 +274,7 @@ class MainActivity : AppCompatActivity() {
                     snackList.add(snackName)
                 }
                 val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
-                foodShopDetailInfoList.add(shopDetailInfo)
+                foodShopDetailInfo = shopDetailInfo
             }
             return@async
 
@@ -293,7 +283,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getDrinkShopDetailInfo() : Deferred<Unit> {
-        drinkShopDetailInfoList.clear()
         var result = CoroutineScope(Dispatchers.Default).async {
 
             val client = OkHttpClient()
@@ -320,7 +309,7 @@ class MainActivity : AppCompatActivity() {
                     snackList.add(snackName)
                 }
                 val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
-                drinkShopDetailInfoList.add(shopDetailInfo)
+                drinkShopDetailInfo = shopDetailInfo
             }
             return@async
         }

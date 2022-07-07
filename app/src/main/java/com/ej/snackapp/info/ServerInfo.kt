@@ -1,4 +1,4 @@
-package com.ej.snackapp
+package com.ej.snackapp.info
 
 class ServerInfo {
     companion object {
