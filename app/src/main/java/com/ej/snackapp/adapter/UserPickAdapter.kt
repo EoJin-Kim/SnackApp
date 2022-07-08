@@ -13,20 +13,21 @@ import com.ej.snackapp.data.UserSnackInfo
 
 class UserPickAdapter(
     private val onClick1: (UserSnackInfo) -> Unit,
-    private val onClick2: () -> String
+    private val onClick2: (UserSnackInfo,Int) -> Unit
 )  : ListAdapter<UserSnackInfo,UserPickAdapter.UserPickViewHolder>(UserPickDiffCallback){
 
 
     class UserPickViewHolder(
         itemView : View,
         val onClick1: (UserSnackInfo) -> Unit,
-        val onClick2: () -> String
+        val onClick2: (UserSnackInfo,Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView){
 
         private val usernameTextView : TextView = itemView.findViewById(R.id.snack_pick_name)
         private val foodPickBtn : Button = itemView.findViewById(R.id.pick_food_btn)
         private val drinkPickBtn : Button = itemView.findViewById(R.id.pick_drink_btn)
         private var currentPickUser : UserSnackInfo? = null
+
         init {
             itemView.setOnClickListener {
 //                currentPickUser?.let{
@@ -35,7 +36,8 @@ class UserPickAdapter(
                 onClick1(currentPickUser!!)
             }
             foodPickBtn.setOnClickListener {
-                foodPickBtn.setText(onClick2())
+                onClick2(currentPickUser!!, layoutPosition)
+//                foodPickBtn.setText(onClick2())
             }
             drinkPickBtn.setOnClickListener {
 
@@ -46,18 +48,18 @@ class UserPickAdapter(
             currentPickUser = userSnackInfo
 
             usernameTextView.text = userSnackInfo.name
-            if(userSnackInfo.food=="" && userSnackInfo.foodOption==""){
+            if(userSnackInfo.food==""){
                 foodPickBtn.setText("간식을 선택해주세요")
             }
             else{
-                foodPickBtn.setText("${userSnackInfo.food} : ${userSnackInfo.foodOption}")
+                foodPickBtn.setText("${userSnackInfo.food}")
             }
 
-            if (userSnackInfo.drink == "" || userSnackInfo.drinkOption == "") {
+            if (userSnackInfo.drink == "") {
                 drinkPickBtn.setText("음료를 선택해주세요")
             }
             else{
-                drinkPickBtn.setText("${userSnackInfo.drink} : ${userSnackInfo.drinkOption}")
+                drinkPickBtn.setText("${userSnackInfo.drink}")
             }
 
         }
@@ -82,9 +84,9 @@ object UserPickDiffCallback : DiffUtil.ItemCallback<UserSnackInfo>(){
 
     override fun areContentsTheSame(oldItem: UserSnackInfo, newItem: UserSnackInfo): Boolean {
         return oldItem.id == newItem.id &&
-                oldItem.food == newItem.food ||
-                oldItem.drink== newItem.drink ||
-                oldItem.drinkOption == newItem.drinkOption ||
+                oldItem.food == newItem.food &&
+                oldItem.drink== newItem.drink &&
+                oldItem.drinkOption == newItem.drinkOption &&
                 oldItem.foodOption == newItem.foodOption
     }
 }

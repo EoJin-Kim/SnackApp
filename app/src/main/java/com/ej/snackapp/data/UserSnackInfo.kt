@@ -4,8 +4,8 @@ data class UserSnackInfo (
 
     val id : Int,
     val name : String,
-    val food : String,
-    val foodOption : String,
-    val drink : String,
-    val drinkOption : String,
+    var food : String,
+    var foodOption : String,
+    var drink : String,
+    var drinkOption : String,
 )

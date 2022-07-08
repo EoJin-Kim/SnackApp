@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="간식 선택"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <ScrollView
         android:layout_width="match_parent"

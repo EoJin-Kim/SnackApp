@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ej.snackapp.databinding.ActivityMainBinding
 import com.ej.snackapp.fragment.PickShopFragment
@@ -19,6 +21,7 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,9 +32,12 @@ class MainActivity : AppCompatActivity() {
 
     val tabNameList = arrayOf("Today Snack", "Result Snack", "Pick Shop")
 
-    val userSnackInfoList = ArrayList<UserSnackInfo>()
+    var userSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
+    var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
+
     val foodShopInfoList = ArrayList<ShopInfo>()
     val drinkShopInfoList = ArrayList<ShopInfo>()
+
 
 
     var nowFoodId = -1
@@ -57,9 +63,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("crt","nowFoodId : ${nowFoodId}")
         Log.d("crt","nowDrinkId: ${nowDrinkId}")
         apiInit2()
-        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.size}")
-        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.size}")
-
+        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.value?.size}")
+        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.value?.size}")
+        Log.d("crt","user member size : ${userSnackInfoList.value?.size}")
         nowSnackSet()
 
         Log.d("crt","${nowFoodType}")
@@ -126,10 +132,15 @@ class MainActivity : AppCompatActivity() {
             getDrinkShopDetailInfo().await()
         }
 
+        val job6 = GlobalScope.launch(Dispatchers.Default){
+            getUserSnackList(true).await()
+        }
+
         runBlocking {
 
             job4.join()
             job5.join()
+            job6.join()
         }
     }
     fun getFoodSnackList() :Deferred<Unit> {
@@ -273,7 +284,9 @@ class MainActivity : AppCompatActivity() {
                     val snackName = snackListData.get(i).toString()
                     snackList.add(snackName)
                 }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
+                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,
+                    MutableLiveData(snackList)
+                )
                 foodShopDetailInfo = shopDetailInfo
             }
             return@async
@@ -308,8 +321,54 @@ class MainActivity : AppCompatActivity() {
                     val snackName = snackListData.get(i).toString()
                     snackList.add(snackName)
                 }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
+                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,MutableLiveData(snackList))
                 drinkShopDetailInfo = shopDetailInfo
+            }
+            return@async
+        }
+        return result
+    }
+
+    fun getUserSnackList(filter:Boolean) : Deferred<Unit>{
+
+//        act.userSnackInfoList!!.value!!.clear()
+        filterUserSnackInfoList.clear()
+
+
+        var result = CoroutineScope(Dispatchers.Default).async {
+
+            val client = OkHttpClient()
+
+            val url = "${ServerInfo.SERVER_URL}/api/snack/pick"
+
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).execute()
+
+            if(response.isSuccessful){
+                val resultText = response.body?.string()!!.trim()
+                Log.d("test",resultText.toString())
+                val root = JSONObject(resultText)
+
+
+                val userSnackInfoList2 = ArrayList<UserSnackInfo>()
+
+                val data = root.getJSONArray("data")
+                for (i in 0 until data.length()) {
+                    val userSnackData = data.getJSONObject(i)
+                    val id = userSnackData.getInt("id")
+                    val name = userSnackData.getString("name")
+                    val food = userSnackData.getString("food")
+                    val foodOption = userSnackData.getString("foodOption")
+                    val drink = userSnackData.getString("drink")
+                    val drinkOption = userSnackData.getString("drinkOption")
+                    val userInfo = UserSnackInfo(id,name, food, foodOption, drink, drinkOption)
+
+                    userSnackInfoList2.add(userInfo)
+                    filterUserSnackInfoList.add(userInfo)
+
+                }
+                userSnackInfoList.postValue(userSnackInfoList2)
+
             }
             return@async
         }
