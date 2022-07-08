@@ -24,11 +24,6 @@ class ResultSnackFragment : Fragment() {
         // Inflate the layout for this fragment
         resultSnackFragmentBinding = FragmentResultSnackBinding.inflate(inflater)
 
-
-
-
-
-
         return resultSnackFragmentBinding.root
     }
 

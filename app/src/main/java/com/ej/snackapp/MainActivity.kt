@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
             mainActivityBinding.pager2
         ) { tab: TabLayout.Tab, i: Int ->
             tab.text = tabNameList[i]
-
         }.attach()
     }
 

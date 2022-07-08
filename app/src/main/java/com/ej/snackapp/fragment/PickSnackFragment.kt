@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,6 @@ import com.ej.snackapp.*
 import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
-import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.info.ShopDetailInfo
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -59,7 +57,7 @@ class PickSnackFragment : Fragment() {
         val userPickAdapter = createUserPickAdapter(act.userSnackInfoList!!.value!!,snackPickAdapter)
 
         val userSnackInfoList = act.userSnackInfoList
-        val foodSnackList = act.foodShopDetailInfo?.snackList
+        val foodSnackList = act.foodShopDetailInfo
         userSnackInfoList?.observe(viewLifecycleOwner, Observer {
             it.let {
                 userPickAdapter.submitList(it.toMutableList())
@@ -146,7 +144,7 @@ class PickSnackFragment : Fragment() {
         Log.d("onclick","btn click")
 
         val layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.alert_dialog,null)
+        val view = layoutInflater.inflate(R.layout.snack_pick_dialog,null)
         val alertDialog = AlertDialog.Builder(requireContext())
             .setView(view)
             .create()
@@ -157,7 +155,7 @@ class PickSnackFragment : Fragment() {
         val confirmButton = view.findViewById<View>(R.id.choice_btn)
 
         snackRecycler.adapter = snackPickAdapter
-        snackRecycler.layoutManager = LinearLayoutManager(context)
+        snackRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         shopNameText.text = act.nowFoodType
 

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/snack_name"
+        android:id="@+id/one_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="간식 이름"
