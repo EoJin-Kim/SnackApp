@@ -6,13 +6,13 @@ class ShopDetailInfo {
     var shopName:String
     var snackType : String
     var menuURI:String
-    var snackList : LiveData<ArrayList<String>>
+    var snackList : ArrayList<String>
 
     constructor(
         shopName: String,
         snackType: String,
         menuURI: String,
-        snackList: LiveData<ArrayList<String>>
+        snackList: ArrayList<String>
     ) {
         this.shopName = shopName
         this.snackType = snackType
