@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity() {
     var nowDrinkType = ""
 
 
-    var foodShopDetailInfo : ShopDetailInfo? = null
-    var drinkShopDetailInfo : ShopDetailInfo? = null
+    var foodShopDetailInfo : MutableLiveData<ShopDetailInfo>? = null
+    var drinkShopDetailInfo : MutableLiveData<ShopDetailInfo>? = null
 
     lateinit var mainActivityBinding: ActivityMainBinding
 
@@ -57,19 +57,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        apiInit1()
-        Log.d("crt","foodShopInfoList.size : ${foodShopInfoList.size}")
-        Log.d("crt","drinkShopInfoList.size : ${drinkShopInfoList.size}")
-        Log.d("crt","nowFoodId : ${nowFoodId}")
-        Log.d("crt","nowDrinkId: ${nowDrinkId}")
-        apiInit2()
-        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.value?.size}")
-        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.value?.size}")
-        Log.d("crt","user member size : ${userSnackInfoList.value?.size}")
-        nowSnackSet()
-
-        Log.d("crt","${nowFoodType}")
-        Log.d("crt","${nowDrinkType}")
+//        apiInit1()
+//        Log.d("crt","foodShopInfoList.size : ${foodShopInfoList.size}")
+//        Log.d("crt","drinkShopInfoList.size : ${drinkShopInfoList.size}")
+//        Log.d("crt","nowFoodId : ${nowFoodId}")
+//        Log.d("crt","nowDrinkId: ${nowDrinkId}")
+//        apiInit2()
+//        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.value?.size}")
+//        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.value?.size}")
+//        Log.d("crt","user member size : ${userSnackInfoList.value?.size}")
+//        nowSnackSet()
+//
+//        Log.d("crt","${nowFoodType}")
+//        Log.d("crt","${nowDrinkType}")
         setTheme(R.style.Theme_SnackApp)
 
         mainActivityBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -143,12 +143,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
     fun getFoodSnackList() :Deferred<Unit> {
+        val snackType = "FOOD"
         foodShopInfoList.clear()
 
         val result = CoroutineScope(Dispatchers.Default).async {
             val client = OkHttpClient()
 
-            val foodUrl = "${ServerInfo.SERVER_URL}/api/shop/FOOD"
+            val foodUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
 
 
             val foodRequest = Request.Builder().url(foodUrl).build()
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                     val shopName = shopData.getString("shopName")
                     val menuURI = shopData.getString("menuURI")
 
-                    val shopInfo = ShopInfo(id, shopName, menuURI)
+                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
 
                     foodShopInfoList.add(shopInfo)
                 }
@@ -176,12 +177,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getDrinkSnackList() : Deferred<Unit>{
+        val snackType = "DRINK"
         drinkShopInfoList.clear()
 
         var result = CoroutineScope(Dispatchers.Default).async {
             val client = OkHttpClient()
 
-            val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/DRINK"
+            val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
 
 
             val foodRequest = Request.Builder().url(drinkUrl).build()
@@ -199,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                     val shopName = shopData.getString("shopName")
                     val menuURI = shopData.getString("menuURI")
 
-                    val shopInfo = ShopInfo(id, shopName, menuURI)
+                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
 
                     drinkShopInfoList.add(shopInfo)
                 }
@@ -284,9 +286,9 @@ class MainActivity : AppCompatActivity() {
                     snackList.add(snackName)
                 }
                 val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,
-                    MutableLiveData(snackList)
+                    snackList
                 )
-                foodShopDetailInfo = shopDetailInfo
+                foodShopDetailInfo = MutableLiveData(shopDetailInfo)
             }
             return@async
 
@@ -320,8 +322,8 @@ class MainActivity : AppCompatActivity() {
                     val snackName = snackListData.get(i).toString()
                     snackList.add(snackName)
                 }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,MutableLiveData(snackList))
-                drinkShopDetailInfo = shopDetailInfo
+                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
+                drinkShopDetailInfo = MutableLiveData(shopDetailInfo)
             }
             return@async
         }

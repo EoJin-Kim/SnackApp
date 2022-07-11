@@ -12,14 +12,14 @@ import com.ej.snackapp.R
 import com.ej.snackapp.data.UserSnackInfo
 
 class UserPickAdapter(
-    private val onClick1: (UserSnackInfo) -> Unit,
+    private val onClick1: (UserSnackInfo,Int) -> Unit,
     private val onClick2: (UserSnackInfo,Int) -> Unit
 )  : ListAdapter<UserSnackInfo,UserPickAdapter.UserPickViewHolder>(UserPickDiffCallback){
 
 
     class UserPickViewHolder(
         itemView : View,
-        val onClick1: (UserSnackInfo) -> Unit,
+        val onClick1: (UserSnackInfo,Int) -> Unit,
         val onClick2: (UserSnackInfo,Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView){
 
@@ -29,18 +29,18 @@ class UserPickAdapter(
         private var currentPickUser : UserSnackInfo? = null
 
         init {
-            itemView.setOnClickListener {
-//                currentPickUser?.let{
-//                    onClick(it)
-//                }
-                onClick1(currentPickUser!!)
-            }
+//            itemView.setOnClickListener {
+////                currentPickUser?.let{
+////                    onClick(it)
+////                }
+//                onClick1(currentPickUser!!)
+//            }
             foodPickBtn.setOnClickListener {
-                onClick2(currentPickUser!!, layoutPosition)
+                onClick1(currentPickUser!!, layoutPosition)
 //                foodPickBtn.setText(onClick2())
             }
             drinkPickBtn.setOnClickListener {
-
+                onClick2(currentPickUser!!,layoutPosition)
             }
         }
 

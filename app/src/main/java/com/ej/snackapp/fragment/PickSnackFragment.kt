@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -32,13 +33,18 @@ import kotlin.concurrent.thread
 class PickSnackFragment : Fragment() {
 
     lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding
-
+    var foodpickAdapter : SnackPickAdapter? = null
+    var drinkPickAdapter : SnackPickAdapter? = null
 
     var selectSnack : TextView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val act  =activity as MainActivity
+        act.apiInit1()
+        act.apiInit2()
+        act.nowSnackSet()
 
     }
 
@@ -52,12 +58,27 @@ class PickSnackFragment : Fragment() {
         pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
 
 
-        val snackPickAdapter = createSnackPickAdapter(act.foodShopDetailInfo!!)
+        foodpickAdapter = createSnackPickAdapter(act.foodShopDetailInfo!!.value!!)
+        drinkPickAdapter = createSnackPickAdapter(act.drinkShopDetailInfo!!.value!!)
 
-        val userPickAdapter = createUserPickAdapter(act.userSnackInfoList!!.value!!,snackPickAdapter)
+        val userPickAdapter = createUserPickAdapter()
 
         val userSnackInfoList = act.userSnackInfoList
-        val foodSnackList = act.foodShopDetailInfo
+        val foodShopDetailInfo = act.foodShopDetailInfo
+        val drinkShopDetailInfo = act.drinkShopDetailInfo
+
+
+        foodShopDetailInfo?.observe(viewLifecycleOwner, Observer{
+            it.let {
+                foodpickAdapter?.submitList(it.snackList)
+            }
+        })
+        drinkShopDetailInfo?.observe(viewLifecycleOwner, Observer{
+            it.let {
+                drinkPickAdapter?.submitList(it.snackList)
+            }
+        })
+
         userSnackInfoList?.observe(viewLifecycleOwner, Observer {
             it.let {
                 userPickAdapter.submitList(it.toMutableList())
@@ -113,18 +134,27 @@ class PickSnackFragment : Fragment() {
 
     }
 
-    private fun createSnackPickAdapter(foodShopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
+    override fun onResume() {
+        super.onResume()
+        val act  =activity as MainActivity
+        act.apiInit1()
+        act.apiInit2()
+        act.nowSnackSet()
+    }
+
+    private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
         val funVal : (String) -> Unit = { str ->snackPickAdapterOnClick(str) }
         val snackPickAdapter = SnackPickAdapter(funVal)
-        snackPickAdapter.submitList(foodShopDetailInfo.snackList.value)
+        snackPickAdapter.submitList(shopDetailInfo.snackList)
 
         return snackPickAdapter
     }
 
-    private fun createUserPickAdapter(userSnackInfoList: ArrayList<UserSnackInfo>,snackPickAdapter: SnackPickAdapter): UserPickAdapter {
-        val funVal: (UserSnackInfo) -> Unit = { userSnackInfo -> userPickAdapterNameOnClick(userSnackInfo) }
-        val funBtnVal: (UserSnackInfo,Int) -> Unit = { userSnackInfo,position-> userPickAdapterButtonOnClick(snackPickAdapter,position) }
-        val userPickAdapter = UserPickAdapter(funVal, funBtnVal)
+    private fun createUserPickAdapter(): UserPickAdapter {
+//        val funVal: (UserSnackInfo) -> Unit = { userSnackInfo -> userPickAdapterNameOnClick(userSnackInfo) }
+        val funFoodBtnVal: (UserSnackInfo,Int) -> Unit = { userSnackInfo,position-> userFoodPickAdapterButtonOnClick(userSnackInfo,position) }
+        val funDrinkBtnVal: (UserSnackInfo,Int) -> Unit = { userSnackInfo,position-> userDrinkPickAdapterButtonOnClick(userSnackInfo,position) }
+        val userPickAdapter = UserPickAdapter(funFoodBtnVal, funDrinkBtnVal)
 
         return userPickAdapter
     }
@@ -139,7 +169,7 @@ class PickSnackFragment : Fragment() {
         Log.d("onclick","name click")
     }
 
-    private fun userPickAdapterButtonOnClick(snackPickAdapter: SnackPickAdapter, position: Int) : String{
+    private fun userFoodPickAdapterButtonOnClick(userSnackInfo : UserSnackInfo, position: Int) : String{
         val act = activity as MainActivity
         Log.d("onclick","btn click")
 
@@ -154,7 +184,8 @@ class PickSnackFragment : Fragment() {
         selectSnack = view.findViewById<TextView>(R.id.select_snack)
         val confirmButton = view.findViewById<View>(R.id.choice_btn)
 
-        snackRecycler.adapter = snackPickAdapter
+
+        snackRecycler.adapter = foodpickAdapter
         snackRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         shopNameText.text = act.nowFoodType
@@ -176,6 +207,90 @@ class PickSnackFragment : Fragment() {
                 json.put("option","")
                 json.put("snack",selectSnack?.text.toString())
                 json.put("snackType","FOOD")
+                val body = RequestBody.create(JSON, json.toString());
+
+//                val request = Request.Builder().url(url).build()
+//                val response = client.newCall(request).execute()
+                val request = Request.Builder()
+                    .url(site)
+                    .post(body)
+                    .build()
+
+                val response = client.newCall(request).execute()
+
+                if(response.isSuccessful){
+                    val resultText = response.body?.string()!!.trim()
+                    Log.d("test",resultText.toString())
+                    val root = JSONObject(resultText)
+
+
+                    val userSnackInfoList2 = ArrayList<UserSnackInfo>()
+
+                    val data = root.getJSONArray("data")
+                    for (i in 0 until data.length()) {
+                        val userSnackData = data.getJSONObject(i)
+                        val id = userSnackData.getInt("id")
+                        val name = userSnackData.getString("name")
+                        val food = userSnackData.getString("food")
+                        val foodOption = userSnackData.getString("foodOption")
+                        val drink = userSnackData.getString("drink")
+                        val drinkOption = userSnackData.getString("drinkOption")
+                        val userInfo = UserSnackInfo(id,name, food, foodOption, drink, drinkOption)
+
+                        userSnackInfoList2.add(userInfo)
+                        act.filterUserSnackInfoList.clear()
+                        act.filterUserSnackInfoList.add(userInfo)
+
+                    }
+                    act.userSnackInfoList.postValue(userSnackInfoList2)
+
+                }
+            }
+            alertDialog.dismiss()
+        }
+        alertDialog.show()
+        return "btn!!"
+    }
+
+
+    private fun userDrinkPickAdapterButtonOnClick(userSnackInfo : UserSnackInfo, position: Int) : String{
+        val act = activity as MainActivity
+        Log.d("onclick","btn click")
+
+        val layoutInflater = LayoutInflater.from(context)
+        val view = layoutInflater.inflate(R.layout.snack_pick_dialog,null)
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(view)
+            .create()
+
+        val snackRecycler = view.findViewById<RecyclerView>(R.id.snack_recycler)
+        val shopNameText = view.findViewById<TextView>(R.id.shop_name)
+        selectSnack = view.findViewById<TextView>(R.id.select_snack)
+        val confirmButton = view.findViewById<View>(R.id.choice_btn)
+
+
+        snackRecycler.adapter = drinkPickAdapter
+        snackRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+        shopNameText.text = act.nowDrinkType
+
+        confirmButton.setOnClickListener{
+            val currentList = act.userSnackInfoList.value
+            val newList = act.userSnackInfoList.value?.clone() as ArrayList<UserSnackInfo>
+            val currentUser = currentList?.get(position)
+            val updateUser = currentUser?.copy()
+            updateUser?.food = selectSnack?.text.toString()
+            newList.set(position,updateUser!!)
+            act.userSnackInfoList.postValue(newList)
+            thread {
+                val client : OkHttpClient = OkHttpClient()
+                val site = "https://sheltered-castle-40247.herokuapp.com/api/snack/pick"
+                val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+                val json : JSONObject = JSONObject()
+                json.put("memberId",currentUser.id)
+                json.put("option","")
+                json.put("snack",selectSnack?.text.toString())
+                json.put("snackType","DRINK")
                 val body = RequestBody.create(JSON, json.toString());
 
 //                val request = Request.Builder().url(url).build()
