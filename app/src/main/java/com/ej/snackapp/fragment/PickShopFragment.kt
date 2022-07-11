@@ -13,19 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.R
 import com.ej.snackapp.adapter.ShopPickAdapter
-import com.ej.snackapp.adapter.SnackPickAdapter
-import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.databinding.FragmentPickShopBinding
-import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.info.ShopInfo
 import kotlinx.coroutines.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
-import kotlin.concurrent.thread
 
 
 class PickShopFragment : Fragment() {
@@ -60,7 +55,7 @@ class PickShopFragment : Fragment() {
 
         val drinkShopInfoList = act.drinkShopInfoList
 
-        val foodShopPickAdapter = createShopPickAdapter()
+        val shopPickAdapter = createShopPickAdapter()
 
 
         pickShopFragmentBinding.foodShopBtn.setOnClickListener {
@@ -72,9 +67,9 @@ class PickShopFragment : Fragment() {
                 .create()
             val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
 
-            shopRecycler.adapter = foodShopPickAdapter
+            shopRecycler.adapter = shopPickAdapter
             shopRecycler.layoutManager = LinearLayoutManager(requireContext())
-            foodShopPickAdapter.submitList(foodShopInfoList)
+            shopPickAdapter.submitList(foodShopInfoList)
             nowDialog = alertDialog
             alertDialog.show()
         }
@@ -87,14 +82,25 @@ class PickShopFragment : Fragment() {
                 .create()
             val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
 
-            shopRecycler.adapter = foodShopPickAdapter
+            shopRecycler.adapter = shopPickAdapter
             shopRecycler.layoutManager = LinearLayoutManager(requireContext())
-            foodShopPickAdapter.submitList(drinkShopInfoList)
+            shopPickAdapter.submitList(drinkShopInfoList)
             nowDialog = alertDialog
             alertDialog.show()
         }
 
         pickShopFragmentBinding.shopCompleteBtn.setOnClickListener {
+            if(nowFoodTextView.text=="간식" || nowDrinkTextView.text=="음료") {
+                val builder = AlertDialog.Builder(requireContext())
+
+                builder.setTitle("가게를 선택해주세요")
+                builder.setMessage("간식과 음료 가게를 선택 해주세요!!")
+
+                builder.setPositiveButton("확인") { diologInterface, i ->
+                }
+                builder.show()
+                return@setOnClickListener
+            }
 
             val job1 = GlobalScope.launch(Dispatchers.Default) {
                 snackShopInit().await()

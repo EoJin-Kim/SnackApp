@@ -56,12 +56,12 @@ class ResultSnackFragment : Fragment() {
             drinkMap.set(userSnackInfo.drink,drinkCnt+1)
         }
         foodMap.forEach { food, count ->
-            if(food=="") return@forEach
+            if(food=="" || food =="간식 선택") return@forEach
             foodResultSb.append("${food} : ${count}개\n")
         }
 
         drinkMap.forEach{ drink, count ->
-            if(drink=="") return@forEach
+            if(drink=="" || drink == "간식 선택") return@forEach
             drinkResultSb.append("${drink} : ${count}개\n")
         }
 

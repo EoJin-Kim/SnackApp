@@ -48,14 +48,14 @@ class UserPickAdapter(
             currentPickUser = userSnackInfo
 
             usernameTextView.text = userSnackInfo.name
-            if(userSnackInfo.food==""){
+            if(userSnackInfo.food=="간식 선택" || userSnackInfo.food == ""){
                 foodPickBtn.setText("간식을 선택해주세요")
             }
             else{
                 foodPickBtn.setText("${userSnackInfo.food}")
             }
 
-            if (userSnackInfo.drink == "") {
+            if (userSnackInfo.drink == "간식 선택" || userSnackInfo.drink == "") {
                 drinkPickBtn.setText("음료를 선택해주세요")
             }
             else{

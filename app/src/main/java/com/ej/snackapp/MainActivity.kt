@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     val tabNameList = arrayOf("Today Snack", "Result Snack", "Pick Shop")
 
     var userSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
-    var filterUserSnackInfoList = mutableListOf<UserSnackInfo>()
+    var filterUserSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
 
     val foodShopInfoList = ArrayList<ShopInfo>()
     val drinkShopInfoList = ArrayList<ShopInfo>()
@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity() {
     var nowDrinkType = ""
 
 
-    var foodShopDetailInfo : MutableLiveData<ShopDetailInfo>? = null
-    var drinkShopDetailInfo : MutableLiveData<ShopDetailInfo>? = null
+    var foodShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","", MutableLiveData())
+    var drinkShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","",MutableLiveData())
 
     lateinit var mainActivityBinding: ActivityMainBinding
 
@@ -141,6 +141,7 @@ class MainActivity : AppCompatActivity() {
             job5.join()
             job6.join()
         }
+        return
     }
     fun getFoodSnackList() :Deferred<Unit> {
         val snackType = "FOOD"
@@ -285,10 +286,11 @@ class MainActivity : AppCompatActivity() {
                     val snackName = snackListData.get(i).toString()
                     snackList.add(snackName)
                 }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,
-                    snackList
-                )
-                foodShopDetailInfo = MutableLiveData(shopDetailInfo)
+                foodShopDetailInfo.shopName=shopName
+                foodShopDetailInfo.snackType = snackType
+                foodShopDetailInfo.menuURI = menuURI
+                foodShopDetailInfo.snackList.postValue(snackList)
+
             }
             return@async
 
@@ -322,8 +324,10 @@ class MainActivity : AppCompatActivity() {
                     val snackName = snackListData.get(i).toString()
                     snackList.add(snackName)
                 }
-                val shopDetailInfo = ShopDetailInfo(shopName,snackType,menuURI,snackList)
-                drinkShopDetailInfo = MutableLiveData(shopDetailInfo)
+                drinkShopDetailInfo.shopName=shopName
+                drinkShopDetailInfo.snackType = snackType
+                drinkShopDetailInfo.menuURI = menuURI
+                drinkShopDetailInfo.snackList.postValue(snackList)
             }
             return@async
         }
@@ -333,7 +337,7 @@ class MainActivity : AppCompatActivity() {
     fun getUserSnackList(filter:Boolean) : Deferred<Unit>{
 
 //        act.userSnackInfoList!!.value!!.clear()
-        filterUserSnackInfoList.clear()
+
 
 
         var result = CoroutineScope(Dispatchers.Default).async {
@@ -365,9 +369,10 @@ class MainActivity : AppCompatActivity() {
                     val userInfo = UserSnackInfo(id,name, food, foodOption, drink, drinkOption)
 
                     userSnackInfoList2.add(userInfo)
-                    filterUserSnackInfoList.add(userInfo)
+
 
                 }
+                filterUserSnackInfoList.postValue(userSnackInfoList2)
                 userSnackInfoList.postValue(userSnackInfoList2)
 
             }

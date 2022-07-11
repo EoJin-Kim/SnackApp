@@ -118,14 +118,6 @@
         android:id="@+id/shop_complete_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="가게 선택 완료"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.5"
         android:background="@drawable/white_edge"

@@ -42,7 +42,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/white_edge"
-                android:text="간식 선택"
+                android:text="간식을 선택해주세요"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -52,7 +52,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/white_edge"
-                android:text="음료 선택"
+                android:text="음료를 선택해주세요"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
