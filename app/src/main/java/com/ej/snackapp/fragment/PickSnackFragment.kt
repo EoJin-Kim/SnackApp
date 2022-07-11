@@ -46,7 +46,10 @@ class PickSnackFragment : Fragment() {
         act.nowSnackSet()
 
         // 가게가 선택되어있지 않으면
-        act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
+        if(act.nowFoodId == 0 || act.nowFoodId == -1 || act.nowDrinkId == 0 || act.nowDrinkId == -1){
+            act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
+        }
+
 
 
     }
@@ -158,7 +161,9 @@ class PickSnackFragment : Fragment() {
         act.nowSnackSet()
 
         // 가게가 선택되어있지 않으면
-        act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
+        if(act.nowFoodId == 0 || act.nowFoodId == -1 || act.nowDrinkId == 0 || act.nowDrinkId == -1){
+            act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
+        }
     }
 
     private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
