@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -23,7 +24,7 @@ import okhttp3.Request
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity() {
 
     val pickSnackFragment = PickSnackFragment()
     val resultSnackFragment = ResultSnackFragment()
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         mainActivityBinding = ActivityMainBinding.inflate(layoutInflater)
 
+
         setContentView(mainActivityBinding.root)
 
 
@@ -96,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         ) { tab: TabLayout.Tab, i: Int ->
             tab.text = tabNameList[i]
         }.attach()
+
     }
 
 

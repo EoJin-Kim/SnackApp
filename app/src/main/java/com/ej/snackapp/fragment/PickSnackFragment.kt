@@ -45,6 +45,7 @@ class PickSnackFragment : Fragment() {
         act.apiInit2()
         act.nowSnackSet()
 
+
     }
 
     override fun onCreateView(
@@ -140,6 +141,7 @@ class PickSnackFragment : Fragment() {
             Log.d("key","enter")
             false
         }
+
         return pickSnackFragmentBinding.root
 
     }
