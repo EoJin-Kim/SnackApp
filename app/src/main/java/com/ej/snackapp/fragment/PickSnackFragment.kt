@@ -45,6 +45,9 @@ class PickSnackFragment : Fragment() {
         act.apiInit2()
         act.nowSnackSet()
 
+        // 가게가 선택되어있지 않으면
+        act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
+
 
     }
 
@@ -56,6 +59,7 @@ class PickSnackFragment : Fragment() {
 
         val act = activity as MainActivity
         pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
+
 
 
         foodpickAdapter = createSnackPickAdapter(act.foodShopDetailInfo)
@@ -152,6 +156,9 @@ class PickSnackFragment : Fragment() {
         act.apiInit1()
         act.apiInit2()
         act.nowSnackSet()
+
+        // 가게가 선택되어있지 않으면
+        act.mainActivityBinding.pager2.currentItem = act.mainActivityBinding.pager2.currentItem+2
     }
 
     private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
