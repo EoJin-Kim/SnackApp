@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
@@ -12,15 +12,23 @@
         android:text="가게 이름"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/main_background" />
+        android:textColor="@color/main_background"
+        android:textSize="34sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/select_snack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/main_white"
         android:text="간식 선택"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="34sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +38,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:background="@color/main_white"
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/snack_recycler"
@@ -43,5 +52,7 @@
         android:id="@+id/choice_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="확인" />
+        android:text="확인"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 </LinearLayout>

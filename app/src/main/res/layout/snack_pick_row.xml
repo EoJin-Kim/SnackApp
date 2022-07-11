@@ -10,13 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="horizontal">
+        android:background="@color/main_background"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/snack_pick_name"
             android:layout_width="match_parent"
             android:layout_height="95dp"
             android:layout_weight="3"
+            android:background="@drawable/white_edge"
+            android:elevation="3dp"
+            android:gravity="center"
             android:text="홍길동"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -24,22 +31,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="95dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/pick_food_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_edge"
                 android:text="간식 선택"
-                app:iconTint="@color/black" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/pick_drink_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_edge"
                 android:text="음료 선택"
-                android:textColor="@color/black" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
 

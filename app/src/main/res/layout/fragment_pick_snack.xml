@@ -16,8 +16,10 @@
     <AutoCompleteTextView
         android:id="@+id/name_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/main_white"
+        android:layout_height="59dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/white_edge"
+        android:elevation="3dp"
         android:hint="이름을 입력해주세요"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />

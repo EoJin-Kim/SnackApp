@@ -11,7 +11,10 @@
         android:background="@color/main_pink"
         android:text="가게 선택"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/main_white"
+        android:textSize="34sp"
+        android:textStyle="bold" />
 
     <ScrollView
         android:layout_width="match_parent"
