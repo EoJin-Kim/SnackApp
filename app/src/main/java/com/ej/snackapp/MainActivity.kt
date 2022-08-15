@@ -132,9 +132,10 @@ class MainActivity : FragmentActivity() {
     }
     fun apiInit2(){
 
-        val scope = CoroutineScope(Dispatchers.IO)
+
 
         runBlocking {
+            val scope = CoroutineScope(Dispatchers.IO)
             val job4 = scope.async {
                 getFoodShopDetailInfo()
             }
