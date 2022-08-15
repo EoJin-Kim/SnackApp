@@ -110,7 +110,7 @@ class MainActivity : FragmentActivity() {
         runBlocking{
             val scope = CoroutineScope(Dispatchers.IO)
 
-            val job1 = scope.async {
+            val job1 = async(Dispatchers.IO) {
                 getDrinkSnackList()
             }
             val job2 = scope.async {
