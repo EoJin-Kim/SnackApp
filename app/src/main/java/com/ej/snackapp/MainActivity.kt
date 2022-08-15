@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.internal.wait
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
@@ -105,140 +106,168 @@ class MainActivity : FragmentActivity() {
 
 
     fun apiInit1() {
-        val job1 = GlobalScope.launch(Dispatchers.Default) {
-            getDrinkSnackList().await()
+
+        runBlocking{
+            val scope = CoroutineScope(Dispatchers.IO)
+
+            val job1 = scope.async {
+                getDrinkSnackList()
+            }
+            val job2 = scope.async {
+                getFoodSnackList()
+            }
+
+            val job3 = scope.async{
+                getNowSnackType()
+            }
+//            job1.await()
+//            job2.await()
+//            job1.join()
+//            job2.join()
+//            job3.join()
+
         }
 
-        val job2 = GlobalScope.launch(Dispatchers.Default) {
-            getFoodSnackList().await()
-        }
 
-        val job3 = GlobalScope.launch(Dispatchers.Default){
-            getNowSnackType().await()
-        }
-
-
-
-        runBlocking {
-            job1.join()
-            job2.join()
-            job3.join()
-        }
     }
     fun apiInit2(){
-        val job4 = GlobalScope.launch(Dispatchers.Default){
-            getFoodShopDetailInfo().await()
-        }
 
-        val job5 = GlobalScope.launch(Dispatchers.Default){
-            getDrinkShopDetailInfo().await()
-        }
-
-        val job6 = GlobalScope.launch(Dispatchers.Default){
-            getUserSnackList(true).await()
-        }
+        val scope = CoroutineScope(Dispatchers.IO)
 
         runBlocking {
+            val job4 = scope.async {
+                getFoodShopDetailInfo()
+            }
 
-            job4.join()
-            job5.join()
-            job6.join()
+            val job5 = scope.async{
+                getDrinkShopDetailInfo()
+            }
+
+            val job6 = scope.async{
+                getUserSnackList(true)
+            }
+            job4.await()
+            job5.await()
+            job6.await()
         }
-        return
     }
-    fun getFoodSnackList() :Deferred<Unit> {
+    fun getFoodSnackList() {
         val snackType = "FOOD"
         foodShopInfoList.clear()
 
-        val result = CoroutineScope(Dispatchers.Default).async {
-            val client = OkHttpClient()
 
-            val foodUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
+        val client = OkHttpClient()
+
+        val foodUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
 
 
-            val foodRequest = Request.Builder().url(foodUrl).build()
-            val foodResponse = client.newCall(foodRequest).execute()
-            if (foodResponse.isSuccessful) {
-                val resultText = foodResponse.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
+        val foodRequest = Request.Builder().url(foodUrl).build()
+        val foodResponse = client.newCall(foodRequest).execute()
+        if (foodResponse.isSuccessful) {
+            val resultText = foodResponse.body?.string()!!.trim()
+            Log.d("test", resultText.toString())
+            val root = JSONObject(resultText)
 
-                val data = root.getJSONArray("data")
-                for (i in 0 until data.length()) {
-                    val shopData = data.getJSONObject(i)
-                    val id = shopData.getInt("id")
-                    val shopName = shopData.getString("shopName")
-                    val menuURI = shopData.getString("menuURI")
+            val data = root.getJSONArray("data")
+            for (i in 0 until data.length()) {
+                val shopData = data.getJSONObject(i)
+                val id = shopData.getInt("id")
+                val shopName = shopData.getString("shopName")
+                val menuURI = shopData.getString("menuURI")
 
-                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
+                val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
 
-                    foodShopInfoList.add(shopInfo)
-                }
+                foodShopInfoList.add(shopInfo)
             }
-            return@async
         }
-        return result;
+
     }
 
-    fun getDrinkSnackList() : Deferred<Unit>{
+    fun getDrinkSnackList() {
         val snackType = "DRINK"
         drinkShopInfoList.clear()
 
-        var result = CoroutineScope(Dispatchers.Default).async {
-            val client = OkHttpClient()
 
-            val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
+        val client = OkHttpClient()
+
+        val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
 
 
-            val foodRequest = Request.Builder().url(drinkUrl).build()
-            val foodResponse = client.newCall(foodRequest).execute()
+        val foodRequest = Request.Builder().url(drinkUrl).build()
+        val foodResponse = client.newCall(foodRequest).execute()
 
-            if (foodResponse.isSuccessful) {
-                val resultText = foodResponse.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
+        if (foodResponse.isSuccessful) {
+            val resultText = foodResponse.body?.string()!!.trim()
+            Log.d("test", resultText.toString())
+            val root = JSONObject(resultText)
 
-                val data = root.getJSONArray("data")
-                for (i in 0 until data.length()) {
-                    val shopData = data.getJSONObject(i)
-                    val id = shopData.getInt("id")
-                    val shopName = shopData.getString("shopName")
-                    val menuURI = shopData.getString("menuURI")
+            val data = root.getJSONArray("data")
+            for (i in 0 until data.length()) {
+                val shopData = data.getJSONObject(i)
+                val id = shopData.getInt("id")
+                val shopName = shopData.getString("shopName")
+                val menuURI = shopData.getString("menuURI")
 
-                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
+                val shopInfo = ShopInfo(id, shopName, menuURI, snackType)
 
-                    drinkShopInfoList.add(shopInfo)
-                }
+                drinkShopInfoList.add(shopInfo)
             }
-            return@async
         }
-        return result
     }
-    fun getNowSnackType() : Deferred<Unit>{
-        var result = CoroutineScope(Dispatchers.Default).async {
-            val client = OkHttpClient()
+//        var result = CoroutineScope(Dispatchers.Default).async {
+//            val client = OkHttpClient()
+//
+//            val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
+//
+//
+//            val foodRequest = Request.Builder().url(drinkUrl).build()
+//            val foodResponse = client.newCall(foodRequest).execute()
+//
+//            if (foodResponse.isSuccessful) {
+//                val resultText = foodResponse.body?.string()!!.trim()
+//                Log.d("test", resultText.toString())
+//                val root = JSONObject(resultText)
+//
+//                val data = root.getJSONArray("data")
+//                for (i in 0 until data.length()) {
+//                    val shopData = data.getJSONObject(i)
+//                    val id = shopData.getInt("id")
+//                    val shopName = shopData.getString("shopName")
+//                    val menuURI = shopData.getString("menuURI")
+//
+//                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
+//
+//                    drinkShopInfoList.add(shopInfo)
+//                }
+//            }
+//            return@async
+//        }
+//        return result
 
-            val drinkUrl = "${ServerInfo.SERVER_URL}/api/snack"
+    fun getNowSnackType(){
+
+        val client = OkHttpClient()
+
+        val drinkUrl = "${ServerInfo.SERVER_URL}/api/snack"
 
 
-            val request = Request.Builder().url(drinkUrl).build()
-            val response = client.newCall(request).execute()
+        val request = Request.Builder().url(drinkUrl).build()
+        val response = client.newCall(request).execute()
 
-            if (response.isSuccessful) {
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
+        if (response.isSuccessful) {
+            val resultText = response.body?.string()!!.trim()
+            Log.d("test", resultText.toString())
+            val root = JSONObject(resultText)
 
-                val data = root.getJSONObject("data")
-                val foodId = data.getInt("foodId")
-                val drinkId = data.getInt("drinkId")
+            val data = root.getJSONObject("data")
+            val foodId = data.getInt("foodId")
+            val drinkId = data.getInt("drinkId")
 
-                nowFoodId = foodId
-                nowDrinkId = drinkId
-            }
-            return@async
+            nowFoodId = foodId
+            nowDrinkId = drinkId
         }
-        return result
+
+
     }
 
     fun nowSnackSet() : Boolean{
@@ -260,11 +289,10 @@ class MainActivity : FragmentActivity() {
         return true
     }
 
-    fun getFoodShopDetailInfo() : Deferred<Unit>{
+    fun getFoodShopDetailInfo(){
 
 
 
-        var result = CoroutineScope(Dispatchers.Default).async {
 
             val client = OkHttpClient()
 
@@ -295,14 +323,13 @@ class MainActivity : FragmentActivity() {
                 foodShopDetailInfo.snackList.postValue(snackList)
 
             }
-            return@async
 
-        }
-        return result
+
+
+
     }
 
-    fun getDrinkShopDetailInfo() : Deferred<Unit> {
-        var result = CoroutineScope(Dispatchers.Default).async {
+    fun getDrinkShopDetailInfo() {
 
             val client = OkHttpClient()
 
@@ -332,18 +359,17 @@ class MainActivity : FragmentActivity() {
                 drinkShopDetailInfo.menuURI = menuURI
                 drinkShopDetailInfo.snackList.postValue(snackList)
             }
-            return@async
-        }
-        return result
+
+
     }
 
-    fun getUserSnackList(filter:Boolean) : Deferred<Unit>{
+    fun getUserSnackList(filter:Boolean) {
 
 //        act.userSnackInfoList!!.value!!.clear()
 
 
 
-        var result = CoroutineScope(Dispatchers.Default).async {
+
 
             val client = OkHttpClient()
 
@@ -379,8 +405,5 @@ class MainActivity : FragmentActivity() {
                 userSnackInfoList.postValue(userSnackInfoList2)
 
             }
-            return@async
-        }
-        return result
     }
 }

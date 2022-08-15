@@ -116,7 +116,7 @@ class PickSnackFragment : Fragment() {
             pickSnackFragmentBinding.snackSwipe.isRefreshing = false
         }
 
-//        pickSnackFragmentBinding.nameInput.setText("김어진")
+        pickSnackFragmentBinding.nameInput.setText("김어진")
         val textChangeListener = object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
