@@ -146,9 +146,9 @@ class MainActivity : FragmentActivity() {
             val job6 = scope.async{
                 getUserSnackList(true)
             }
-            job4.await()
-            job5.await()
-            job6.await()
+//            job4.await()
+//            job5.await()
+//            job6.await()
         }
     }
     fun getFoodSnackList() {
