@@ -1,4 +1,4 @@
-package com.ej.snackapp.fragment
+package com.ej.snackapp.fragment.bottom.snack.tab
 
 import android.os.Bundle
 import android.util.Log
@@ -131,6 +131,7 @@ class PickShopFragment : Fragment() {
         }
         return pickShopFragmentBinding.root
     }
+
 
 
     private fun createShopPickAdapter(): ShopPickAdapter {

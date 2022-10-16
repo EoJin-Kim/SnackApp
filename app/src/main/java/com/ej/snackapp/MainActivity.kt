@@ -1,38 +1,24 @@
 package com.ej.snackapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ej.snackapp.databinding.ActivityMainBinding
-import com.ej.snackapp.fragment.PickShopFragment
-import com.ej.snackapp.fragment.PickSnackFragment
-import com.ej.snackapp.fragment.ResultSnackFragment
 import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.info.ShopDetailInfo
 import com.ej.snackapp.info.ShopInfo
 import com.ej.snackapp.data.UserSnackInfo
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.internal.wait
 import org.json.JSONObject
-import kotlin.concurrent.thread
 
 class MainActivity : FragmentActivity() {
 
-    val pickSnackFragment = PickSnackFragment()
-    val resultSnackFragment = ResultSnackFragment()
-    val pickShopFragment = PickShopFragment()
-    val fragList = arrayOf(pickSnackFragment, resultSnackFragment, pickShopFragment)
 
-    val tabNameList = arrayOf("Today Snack", "Result Snack", "Pick Shop")
+
+
 
     var userSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
     var filterUserSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
@@ -80,25 +66,9 @@ class MainActivity : FragmentActivity() {
         setContentView(mainActivityBinding.root)
 
 
-        val adapter1 = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int {
-                return fragList.size
-            }
 
-            override fun createFragment(position: Int): Fragment {
-                return fragList[position]
-            }
-        }
 
-        mainActivityBinding.pager2.adapter = adapter1
 
-        // tab과 viewpager를 연결한다다
-        TabLayoutMediator(
-            mainActivityBinding.tabs,
-            mainActivityBinding.pager2
-        ) { tab: TabLayout.Tab, i: Int ->
-            tab.text = tabNameList[i]
-        }.attach()
 
     }
 
