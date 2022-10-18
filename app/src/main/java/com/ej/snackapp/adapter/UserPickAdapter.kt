@@ -9,24 +9,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
-import com.ej.snackapp.data.UserSnackInfo
+import com.ej.snackapp.dto.UserSnackInfoDto
 
 class UserPickAdapter(
-    private val onClick1: (UserSnackInfo,Int) -> Unit,
-    private val onClick2: (UserSnackInfo,Int) -> Unit
-)  : ListAdapter<UserSnackInfo,UserPickAdapter.UserPickViewHolder>(UserPickDiffCallback){
+    private val onClick1: (UserSnackInfoDto, Int) -> Unit,
+    private val onClick2: (UserSnackInfoDto, Int) -> Unit
+)  : ListAdapter<UserSnackInfoDto,UserPickAdapter.UserPickViewHolder>(UserPickDiffCallback){
 
 
     class UserPickViewHolder(
         itemView : View,
-        val onClick1: (UserSnackInfo,Int) -> Unit,
-        val onClick2: (UserSnackInfo,Int) -> Unit
+        val onClick1: (UserSnackInfoDto, Int) -> Unit,
+        val onClick2: (UserSnackInfoDto, Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView){
 
         private val usernameTextView : TextView = itemView.findViewById(R.id.snack_pick_name)
         private val foodPickBtn : Button = itemView.findViewById(R.id.pick_food_btn)
         private val drinkPickBtn : Button = itemView.findViewById(R.id.pick_drink_btn)
-        private var currentPickUser : UserSnackInfo? = null
+        private var currentPickUser : UserSnackInfoDto? = null
 
         init {
 //            itemView.setOnClickListener {
@@ -44,22 +44,22 @@ class UserPickAdapter(
             }
         }
 
-        fun bind(userSnackInfo: UserSnackInfo) {
-            currentPickUser = userSnackInfo
+        fun bind(userSnackInfoDto: UserSnackInfoDto) {
+            currentPickUser = userSnackInfoDto
 
-            usernameTextView.text = userSnackInfo.name
-            if(userSnackInfo.food=="간식 선택" || userSnackInfo.food == ""){
+            usernameTextView.text = userSnackInfoDto.name
+            if(userSnackInfoDto.food=="간식 선택" || userSnackInfoDto.food == ""){
                 foodPickBtn.setText("간식을 선택해주세요")
             }
             else{
-                foodPickBtn.setText("${userSnackInfo.food}")
+                foodPickBtn.setText("${userSnackInfoDto.food}")
             }
 
-            if (userSnackInfo.drink == "간식 선택" || userSnackInfo.drink == "") {
+            if (userSnackInfoDto.drink == "간식 선택" || userSnackInfoDto.drink == "") {
                 drinkPickBtn.setText("음료를 선택해주세요")
             }
             else{
-                drinkPickBtn.setText("${userSnackInfo.drink}")
+                drinkPickBtn.setText("${userSnackInfoDto.drink}")
             }
 
         }
@@ -77,12 +77,12 @@ class UserPickAdapter(
     }
 }
 
-object UserPickDiffCallback : DiffUtil.ItemCallback<UserSnackInfo>(){
-    override fun areItemsTheSame(oldItem: UserSnackInfo, newItem: UserSnackInfo): Boolean {
+object UserPickDiffCallback : DiffUtil.ItemCallback<UserSnackInfoDto>(){
+    override fun areItemsTheSame(oldItem: UserSnackInfoDto, newItem: UserSnackInfoDto): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: UserSnackInfo, newItem: UserSnackInfo): Boolean {
+    override fun areContentsTheSame(oldItem: UserSnackInfoDto, newItem: UserSnackInfoDto): Boolean {
         return oldItem.id == newItem.id &&
                 oldItem.food == newItem.food &&
                 oldItem.drink== newItem.drink &&

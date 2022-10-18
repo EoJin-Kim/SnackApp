@@ -1,4 +1,4 @@
-package com.ej.snackapp.data
+package com.ej.snackapp.dto
 
 import com.squareup.moshi.Json
 

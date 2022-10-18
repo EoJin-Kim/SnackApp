@@ -51,7 +51,7 @@ class ResultSnackFragment : Fragment() {
 
         val foodMap: MutableMap<String,Int> = mutableMapOf()
         val drinkMap: MutableMap<String,Int> = mutableMapOf()
-        val userSnackInfoList = act.userSnackInfoList.value
+        val userSnackInfoList = mainViewModel.userPickInfo.value
 
         for(userSnackInfo in userSnackInfoList!!){
             val foodCnt = foodMap.getOrDefault(userSnackInfo.food,0)

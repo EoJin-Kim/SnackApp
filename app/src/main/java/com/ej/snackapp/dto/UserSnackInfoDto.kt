@@ -1,6 +1,6 @@
-package com.ej.snackapp.data
+package com.ej.snackapp.dto
 
-data class UserSnackInfo (
+data class UserSnackInfoDto (
 
     var id : Int,
     var name : String,

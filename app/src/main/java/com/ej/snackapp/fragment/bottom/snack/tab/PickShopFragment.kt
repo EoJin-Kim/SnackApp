@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.R
 import com.ej.snackapp.adapter.ShopPickAdapter
-import com.ej.snackapp.data.UserSnackInfo
+import com.ej.snackapp.dto.UserSnackInfoDto
 import com.ej.snackapp.databinding.FragmentPickShopBinding
+import com.ej.snackapp.dto.ShopInfoDto
+import com.ej.snackapp.dto.SnackType
 import com.ej.snackapp.info.ShopInfo
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,17 +33,16 @@ class PickShopFragment : Fragment() {
     lateinit var pickShopFragmentBinding : FragmentPickShopBinding
 
     private val mainViewModel : MainViewModel by viewModels()
+    val act by lazy{activity as MainActivity}
+
     var nowDialog : AlertDialog? = null
     lateinit var nowFoodTextView : TextView
     lateinit var nowDrinkTextView : TextView
 
-    var foodShopInfo: ShopInfo? = null
-    var drinkShopInfo : ShopInfo? = null
+    var foodShopInfo: ShopInfoDto? = null
+    var drinkShopInfo : ShopInfoDto? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,46 +53,7 @@ class PickShopFragment : Fragment() {
         pickShopFragmentBinding = FragmentPickShopBinding.inflate(inflater)
 
         nowFoodTextView = pickShopFragmentBinding.selectFood
-
         nowDrinkTextView = pickShopFragmentBinding.selectDrink
-
-        val foodShopInfoList = act.foodShopInfoList
-
-        val drinkShopInfoList = act.drinkShopInfoList
-
-        val shopPickAdapter = createShopPickAdapter()
-
-
-        pickShopFragmentBinding.foodShopBtn.setOnClickListener {
-
-            val layoutInflater = LayoutInflater.from(context)
-            val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
-            val alertDialog = AlertDialog.Builder(requireContext())
-                .setView(view)
-                .create()
-            val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-
-            shopRecycler.adapter = shopPickAdapter
-            shopRecycler.layoutManager = LinearLayoutManager(requireContext())
-            shopPickAdapter.submitList(foodShopInfoList)
-            nowDialog = alertDialog
-            alertDialog.show()
-        }
-
-        pickShopFragmentBinding.drinkShopBtn.setOnClickListener {
-            val layoutInflater = LayoutInflater.from(context)
-            val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
-            val alertDialog = AlertDialog.Builder(requireContext())
-                .setView(view)
-                .create()
-            val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-
-            shopRecycler.adapter = shopPickAdapter
-            shopRecycler.layoutManager = LinearLayoutManager(requireContext())
-            shopPickAdapter.submitList(drinkShopInfoList)
-            nowDialog = alertDialog
-            alertDialog.show()
-        }
 
         pickShopFragmentBinding.shopCompleteBtn.setOnClickListener {
             if(nowFoodTextView.text=="간식" || nowDrinkTextView.text=="음료") {
@@ -109,18 +71,10 @@ class PickShopFragment : Fragment() {
             val job1 = GlobalScope.launch(Dispatchers.Default) {
                 snackShopInit().await()
             }
-            val job2 = GlobalScope.launch(Dispatchers.Default) {
-                pickSnackShop(foodShopInfo!!).await()
-            }
 
-            val job3 = GlobalScope.launch(Dispatchers.Default) {
-                pickSnackShop(drinkShopInfo!!).await()
-            }
 
             runBlocking {
                 job1.join()
-                job2.join()
-                job3.join()
             }
             act.apiInit2()
             act.nowSnackSet()
@@ -136,25 +90,74 @@ class PickShopFragment : Fragment() {
         return pickShopFragmentBinding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val foodShopInfoList = act.foodShopInfoList
+        val foodShopPickAdapter = createShopPickAdapter(SnackType.FOOD)
+        pickShopFragmentBinding.foodShopBtn.setOnClickListener {
+            mainViewModel.fetchShopInfo(SnackType.FOOD)
+
+            mainViewModel.foodShopInfo.observe(viewLifecycleOwner){
+                foodShopPickAdapter.submitList(it)
+                val layoutInflater = LayoutInflater.from(context)
+                val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
+                val alertDialog = AlertDialog.Builder(requireContext())
+                    .setView(view)
+                    .create()
+                val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
+
+                shopRecycler.adapter = foodShopPickAdapter
+                shopRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+                nowDialog = alertDialog
+                alertDialog.show()
+            }
+        }
+
+        val drinkShopPickAdapter = createShopPickAdapter(SnackType.DRINK)
+
+        pickShopFragmentBinding.drinkShopBtn.setOnClickListener {
+            mainViewModel.fetchShopInfo(SnackType.DRINK)
+
+            mainViewModel.drinkShopInfo.observe(viewLifecycleOwner){
+                drinkShopPickAdapter.submitList(it)
+                val layoutInflater = LayoutInflater.from(context)
+                val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
+                val alertDialog = AlertDialog.Builder(requireContext())
+                    .setView(view)
+                    .create()
+                val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
+
+                shopRecycler.adapter = drinkShopPickAdapter
+                shopRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+                nowDialog = alertDialog
+                alertDialog.show()
+            }
+
+        }
+
+    }
 
 
-    private fun createShopPickAdapter(): ShopPickAdapter {
-        val funVal: (ShopInfo) -> Unit = { shopInfo -> shopPickAdapterNameOnClick(shopInfo) }
+
+    private fun createShopPickAdapter(snackType: SnackType): ShopPickAdapter {
+        val funVal: (ShopInfoDto) -> Unit = { shopInfo -> shopPickAdapterNameOnClick(shopInfo,snackType) }
         val shopPickAdapter = ShopPickAdapter(funVal)
         return shopPickAdapter
     }
 
-    private fun shopPickAdapterNameOnClick(shopInfo: ShopInfo){
+    private fun shopPickAdapterNameOnClick(shopInfo: ShopInfoDto,snackType: SnackType){
         Log.d("onclick","${shopInfo.shopName}")
         val act = activity as MainActivity
         // shop 선택 api 보내고
         // 받은 데이터를 view에 셋팅
-        if(shopInfo.shopType=="FOOD"){
+        if(snackType==SnackType.FOOD){
             foodShopInfo=shopInfo
             nowFoodTextView.text = shopInfo.shopName
             nowDialog!!.dismiss()
         }
-        else if(shopInfo.shopType=="DRINK"){
+        else if(snackType==SnackType.DRINK){
             drinkShopInfo = shopInfo
             nowDrinkTextView.text =shopInfo.shopName
             nowDialog!!.dismiss()
@@ -163,7 +166,6 @@ class PickShopFragment : Fragment() {
     }
 
     fun snackShopInit() : Deferred<Unit>{
-        val act = activity as MainActivity
         var result = CoroutineScope(Dispatchers.Default).async {
 
             val client : OkHttpClient = OkHttpClient()
@@ -180,48 +182,4 @@ class PickShopFragment : Fragment() {
         }
         return result
     }
-
-    fun pickSnackShop(shopInfo : ShopInfo) : Deferred<Unit>{
-        val act = activity as MainActivity
-        var result = CoroutineScope(Dispatchers.Default).async {
-            val client : OkHttpClient = OkHttpClient()
-            val site = "https://sheltered-castle-40247.herokuapp.com/api/snack/${shopInfo.shopType}/${shopInfo.id}"
-
-            val body = RequestBody.create(null, byteArrayOf());
-
-            val request = Request.Builder()
-                .url(site)
-                .put(body)
-                .build()
-
-            val response = client.newCall(request).execute()
-
-            if(response.isSuccessful){
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test",resultText.toString())
-                val root = JSONObject(resultText)
-
-
-                val userSnackInfoList2 = ArrayList<UserSnackInfo>()
-
-                val data = root.getJSONObject("data")
-
-                val foodId = data.getInt("foodId")
-                val drinkId = data.getInt("drinkId")
-
-
-                act.nowFoodId = foodId
-                act.nowDrinkId = drinkId
-
-                act.nowSnackSet()
-
-                nowFoodTextView.text =act.nowFoodType
-                nowDrinkTextView.text = act.nowDrinkType
-            }
-            nowDialog!!.dismiss()
-            return@async
-        }
-        return result
-    }
-
 }

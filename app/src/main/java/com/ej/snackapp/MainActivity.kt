@@ -8,7 +8,7 @@ import com.ej.snackapp.databinding.ActivityMainBinding
 import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.info.ShopDetailInfo
 import com.ej.snackapp.info.ShopInfo
-import com.ej.snackapp.data.UserSnackInfo
+import com.ej.snackapp.dto.UserSnackInfoDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -17,8 +17,8 @@ import org.json.JSONObject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
-    var userSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
-    var filterUserSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
+
+    var filterUserSnackInfoDtoList : MutableLiveData<ArrayList<UserSnackInfoDto>> = MutableLiveData<ArrayList<UserSnackInfoDto>> ()
 
     val foodShopInfoList = ArrayList<ShopInfo>()
     val drinkShopInfoList = ArrayList<ShopInfo>()
@@ -42,29 +42,9 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        apiInit1()
-//        Log.d("crt","foodShopInfoList.size : ${foodShopInfoList.size}")
-//        Log.d("crt","drinkShopInfoList.size : ${drinkShopInfoList.size}")
-//        Log.d("crt","nowFoodId : ${nowFoodId}")
-//        Log.d("crt","nowDrinkId: ${nowDrinkId}")
-//        apiInit2()
-//        Log.d("crt","foodShopDetailInfo?.snackList?.size : ${foodShopDetailInfo?.snackList?.value?.size}")
-//        Log.d("crt","drinkShopDetailInfo?.snackList?.size : ${drinkShopDetailInfo?.snackList?.value?.size}")
-//        Log.d("crt","user member size : ${userSnackInfoList.value?.size}")
-//        nowSnackSet()
-//
-//        Log.d("crt","${nowFoodType}")
-//        Log.d("crt","${nowDrinkType}")
         setTheme(R.style.Theme_SnackApp)
-
         mainActivityBinding = ActivityMainBinding.inflate(layoutInflater)
-
-
         setContentView(mainActivityBinding.root)
-
-
-
-
 
 
     }
@@ -111,9 +91,7 @@ class MainActivity : FragmentActivity() {
                 getDrinkShopDetailInfo()
             }
 
-            val job6 = scope.async{
-                getUserSnackList(true)
-            }
+
 //            job4.await()
 //            job5.await()
 //            job6.await()
@@ -329,49 +307,5 @@ class MainActivity : FragmentActivity() {
             }
 
 
-    }
-
-    fun getUserSnackList(filter:Boolean) {
-
-//        act.userSnackInfoList!!.value!!.clear()
-
-
-
-
-
-            val client = OkHttpClient()
-
-            val url = "${ServerInfo.SERVER_URL}/api/snack/pick"
-
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            if(response.isSuccessful){
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test",resultText.toString())
-                val root = JSONObject(resultText)
-
-
-                val userSnackInfoList2 = ArrayList<UserSnackInfo>()
-
-                val data = root.getJSONArray("data")
-                for (i in 0 until data.length()) {
-                    val userSnackData = data.getJSONObject(i)
-                    val id = userSnackData.getInt("id")
-                    val name = userSnackData.getString("name")
-                    val food = userSnackData.getString("food")
-                    val foodOption = userSnackData.getString("foodOption")
-                    val drink = userSnackData.getString("drink")
-                    val drinkOption = userSnackData.getString("drinkOption")
-                    val userInfo = UserSnackInfo(id,name, food, foodOption, drink, drinkOption)
-
-                    userSnackInfoList2.add(userInfo)
-
-
-                }
-                filterUserSnackInfoList.postValue(userSnackInfoList2)
-                userSnackInfoList.postValue(userSnackInfoList2)
-
-            }
     }
 }

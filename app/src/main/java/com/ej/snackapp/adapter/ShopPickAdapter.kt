@@ -8,18 +8,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
+import com.ej.snackapp.dto.ShopInfoDto
 import com.ej.snackapp.info.ShopInfo
 
-class ShopPickAdapter(private val onClick: (ShopInfo) -> Unit)
-    : ListAdapter<ShopInfo, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
+class ShopPickAdapter(private val onClick: (ShopInfoDto) -> Unit)
+    : ListAdapter<ShopInfoDto, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
 
     class ShopPickViewHolder(
         itemView : View,
-        val onClick: (ShopInfo) -> Unit,
+        val onClick: (ShopInfoDto) -> Unit,
     ) : RecyclerView.ViewHolder(itemView){
 
         private var shopNameTextView : TextView = itemView.findViewById(R.id.one_name)
-        private var shopInfo: ShopInfo? = null
+        private var shopInfo: ShopInfoDto? = null
 
         init{
             itemView.setOnClickListener {
@@ -27,7 +28,7 @@ class ShopPickAdapter(private val onClick: (ShopInfo) -> Unit)
             }
         }
 
-        fun bind(shopInfo : ShopInfo){
+        fun bind(shopInfo : ShopInfoDto){
             this.shopInfo = shopInfo
             shopNameTextView.text = shopInfo.shopName
         }
@@ -47,13 +48,13 @@ class ShopPickAdapter(private val onClick: (ShopInfo) -> Unit)
 }
 
 
-object ShopPickDiffCallback : DiffUtil.ItemCallback<ShopInfo>(){
-    override fun areItemsTheSame(oldItem: ShopInfo, newItem: ShopInfo): Boolean {
+object ShopPickDiffCallback : DiffUtil.ItemCallback<ShopInfoDto>(){
+    override fun areItemsTheSame(oldItem: ShopInfoDto, newItem: ShopInfoDto): Boolean {
         return oldItem == newItem
     }
 
 
-    override fun areContentsTheSame(oldItem: ShopInfo, newItem: ShopInfo): Boolean {
+    override fun areContentsTheSame(oldItem: ShopInfoDto, newItem: ShopInfoDto): Boolean {
         return oldItem.shopName == newItem.shopName
     }
 }
