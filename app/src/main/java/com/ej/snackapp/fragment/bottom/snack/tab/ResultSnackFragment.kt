@@ -5,14 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentResultSnackBinding
+import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ResultSnackFragment : Fragment() {
     lateinit var resultSnackFragmentBinding : FragmentResultSnackBinding
 
+
+    private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

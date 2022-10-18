@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentSnackBinding
 import com.ej.snackapp.fragment.bottom.snack.tab.PickShopFragment
 import com.ej.snackapp.fragment.bottom.snack.tab.PickSnackFragment
 import com.ej.snackapp.fragment.bottom.snack.tab.ResultSnackFragment
+import com.ej.snackapp.viewmodel.MainViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SnackFragment : Fragment() {
     lateinit var snackFragmentBinding : FragmentSnackBinding
+
+    private val mainViewModel : MainViewModel by viewModels()
+
     val act by lazy{activity as MainActivity}
 
     val pickSnackFragment = PickSnackFragment()

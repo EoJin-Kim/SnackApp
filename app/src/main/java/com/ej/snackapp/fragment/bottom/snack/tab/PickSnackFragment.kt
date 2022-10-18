@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
 import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.info.ShopDetailInfo
+import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -33,6 +35,9 @@ import kotlin.concurrent.thread
 class PickSnackFragment : Fragment() {
 
     lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding
+
+    private val mainViewModel : MainViewModel by viewModels()
+
     var foodpickAdapter : SnackPickAdapter? = null
     var drinkPickAdapter : SnackPickAdapter? = null
 
@@ -148,6 +153,12 @@ class PickSnackFragment : Fragment() {
         }
 
         return pickSnackFragmentBinding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mainViewModel.fetchUserPickInfo()
 
     }
 

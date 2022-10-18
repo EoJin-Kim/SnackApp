@@ -12,5 +12,5 @@ interface SnackApi {
 
 
     @GET("${firstUrl}/pick")
-    suspend fun getUserPickInfo() : ApiResponse<ArrayList<UserSnackInfo>>
+    suspend fun getUserPickInfo() : ApiResponse<MutableList<UserSnackInfo>>
 }
