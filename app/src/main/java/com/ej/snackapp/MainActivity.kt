@@ -9,17 +9,14 @@ import com.ej.snackapp.info.ServerInfo
 import com.ej.snackapp.info.ShopDetailInfo
 import com.ej.snackapp.info.ShopInfo
 import com.ej.snackapp.data.UserSnackInfo
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
-
-
-
-
-
     var userSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
     var filterUserSnackInfoList : MutableLiveData<ArrayList<UserSnackInfo>> = MutableLiveData<ArrayList<UserSnackInfo>> ()
 

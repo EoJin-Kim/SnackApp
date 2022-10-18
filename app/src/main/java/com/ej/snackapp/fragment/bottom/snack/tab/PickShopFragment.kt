@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
@@ -16,17 +17,20 @@ import com.ej.snackapp.adapter.ShopPickAdapter
 import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.databinding.FragmentPickShopBinding
 import com.ej.snackapp.info.ShopInfo
+import com.ej.snackapp.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
 
-
+@AndroidEntryPoint
 class PickShopFragment : Fragment() {
 
     lateinit var pickShopFragmentBinding : FragmentPickShopBinding
 
+    private val mainViewModel : MainViewModel by viewModels()
     var nowDialog : AlertDialog? = null
     lateinit var nowFoodTextView : TextView
     lateinit var nowDrinkTextView : TextView

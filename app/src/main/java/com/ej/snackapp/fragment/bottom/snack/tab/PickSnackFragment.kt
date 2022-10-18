@@ -21,6 +21,7 @@ import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
 import com.ej.snackapp.data.UserSnackInfo
 import com.ej.snackapp.info.ShopDetailInfo
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,7 +29,7 @@ import okhttp3.RequestBody
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
-
+@AndroidEntryPoint
 class PickSnackFragment : Fragment() {
 
     lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding

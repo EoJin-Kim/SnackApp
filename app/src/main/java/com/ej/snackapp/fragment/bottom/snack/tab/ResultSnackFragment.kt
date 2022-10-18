@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentResultSnackBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ResultSnackFragment : Fragment() {
     lateinit var resultSnackFragmentBinding : FragmentResultSnackBinding
 

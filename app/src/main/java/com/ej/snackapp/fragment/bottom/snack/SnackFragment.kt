@@ -13,7 +13,9 @@ import com.ej.snackapp.fragment.bottom.snack.tab.PickSnackFragment
 import com.ej.snackapp.fragment.bottom.snack.tab.ResultSnackFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SnackFragment : Fragment() {
     lateinit var snackFragmentBinding : FragmentSnackBinding
     val act by lazy{activity as MainActivity}
