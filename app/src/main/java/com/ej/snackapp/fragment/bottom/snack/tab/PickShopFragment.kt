@@ -14,18 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.R
 import com.ej.snackapp.adapter.ShopPickAdapter
-import com.ej.snackapp.dto.UserSnackInfoDto
 import com.ej.snackapp.databinding.FragmentPickShopBinding
 import com.ej.snackapp.dto.ShopInfoDto
 import com.ej.snackapp.dto.SnackType
-import com.ej.snackapp.info.ShopInfo
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import org.json.JSONObject
 
 @AndroidEntryPoint
 class PickShopFragment : Fragment() {
@@ -57,37 +50,37 @@ class PickShopFragment : Fragment() {
 
         pickShopFragmentBinding.shopCompleteBtn.setOnClickListener {
             if(nowFoodTextView.text=="간식" || nowDrinkTextView.text=="음료") {
-                val builder = AlertDialog.Builder(requireContext())
-
-                builder.setTitle("가게를 선택해주세요")
-                builder.setMessage("간식과 음료 가게를 선택 해주세요!!")
-
-                builder.setPositiveButton("확인") { diologInterface, i ->
-                }
-                builder.show()
+                shopSelectFailedAlert()
                 return@setOnClickListener
             }
 
-            val job1 = GlobalScope.launch(Dispatchers.Default) {
-                snackShopInit().await()
-            }
-
-
-            runBlocking {
-                job1.join()
-            }
-            act.apiInit2()
+            mainViewModel.selectSnackShop(foodShopInfo!!.id,foodShopInfo!!.id)
             act.nowSnackSet()
-            val builder = AlertDialog.Builder(requireContext())
-
-            builder.setTitle("가게선택 완료")
-            builder.setMessage("가게선택 완료!!")
-
-            builder.setPositiveButton("확인!") { diologInterface, i ->
-            }
-            builder.show()
+            shopSelectSuccessAlert()
         }
         return pickShopFragmentBinding.root
+    }
+
+    private fun shopSelectSuccessAlert() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("가게선택 완료")
+        builder.setMessage("가게선택 완료!!")
+
+        builder.setPositiveButton("확인!") { diologInterface, i ->
+        }
+        builder.show()
+    }
+
+    private fun shopSelectFailedAlert() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("가게를 선택해주세요")
+        builder.setMessage("간식과 음료 가게를 선택 해주세요!!")
+
+        builder.setPositiveButton("확인") { diologInterface, i ->
+        }
+        builder.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -105,9 +98,10 @@ class PickShopFragment : Fragment() {
                     .setView(view)
                     .create()
                 val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-
-                shopRecycler.adapter = foodShopPickAdapter
-                shopRecycler.layoutManager = LinearLayoutManager(requireContext())
+                shopRecycler.apply {
+                    adapter = foodShopPickAdapter
+                    layoutManager = LinearLayoutManager(requireContext())
+                }
 
                 nowDialog = alertDialog
                 alertDialog.show()
@@ -149,37 +143,18 @@ class PickShopFragment : Fragment() {
 
     private fun shopPickAdapterNameOnClick(shopInfo: ShopInfoDto,snackType: SnackType){
         Log.d("onclick","${shopInfo.shopName}")
-        val act = activity as MainActivity
         // shop 선택 api 보내고
         // 받은 데이터를 view에 셋팅
         if(snackType==SnackType.FOOD){
             foodShopInfo=shopInfo
             nowFoodTextView.text = shopInfo.shopName
-            nowDialog!!.dismiss()
         }
         else if(snackType==SnackType.DRINK){
             drinkShopInfo = shopInfo
             nowDrinkTextView.text =shopInfo.shopName
-            nowDialog!!.dismiss()
         }
+        nowDialog!!.dismiss()
 
     }
 
-    fun snackShopInit() : Deferred<Unit>{
-        var result = CoroutineScope(Dispatchers.Default).async {
-
-            val client : OkHttpClient = OkHttpClient()
-            val url = "https://sheltered-castle-40247.herokuapp.com/api/snack/init"
-
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            if (response.isSuccessful) {
-
-            }
-
-            return@async
-        }
-        return result
-    }
 }

@@ -1,10 +1,8 @@
 package com.ej.snackapp.api
 
-import com.ej.snackapp.dto.ApiResponse
-import com.ej.snackapp.dto.ShopInfoDto
-import com.ej.snackapp.dto.SnackType
-import com.ej.snackapp.dto.UserSnackInfoDto
+import com.ej.snackapp.dto.*
 import retrofit2.http.GET
+import retrofit2.http.PUT
 
 interface SnackApi {
     companion object{
@@ -20,5 +18,8 @@ interface SnackApi {
 
     @GET("${firstUrl}/shop/DRINK")
     suspend fun getDrinkShopInfo(): ApiResponse<MutableList<ShopInfoDto>>
+
+    @PUT("${firstUrl}/snack/snackshop")
+    suspend fun updateSnackShop(snackShopDto: SnackShopDto): String
 
 }
