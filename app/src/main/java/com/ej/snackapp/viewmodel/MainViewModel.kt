@@ -20,6 +20,9 @@ class MainViewModel @Inject constructor(
 
     val updateCheck = MutableLiveData<String>()
 
+    var foodShopId = -1L
+    var drinkShopId = -1L
+
     fun fetchUserPickInfo(){
         viewModelScope.launch{
             val userSnackInfoResult = snackApi.getUserPickInfo()
@@ -41,7 +44,9 @@ class MainViewModel @Inject constructor(
 
     fun selectSnackShop(foodShopId: Long, drinkShopId: Long) {
         viewModelScope.launch {
-            updateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShopId,drinkShopId))
+            updateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShopId,drinkShopId)).data!!
+            this@MainViewModel.foodShopId = foodShopId
+            this@MainViewModel.drinkShopId = drinkShopId
         }
     }
 }

@@ -23,135 +23,112 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PickShopFragment : Fragment() {
 
-    lateinit var pickShopFragmentBinding : FragmentPickShopBinding
+    lateinit var pickShopFragmentBinding: FragmentPickShopBinding
 
-    private val mainViewModel : MainViewModel by viewModels()
-    val act by lazy{activity as MainActivity}
+    private val mainViewModel: MainViewModel by viewModels()
+    val act by lazy { activity as MainActivity }
 
-    var nowDialog : AlertDialog? = null
-    lateinit var nowFoodTextView : TextView
-    lateinit var nowDrinkTextView : TextView
+    var nowDialog: AlertDialog? = null
+    lateinit var nowFoodTextView: TextView
+    lateinit var nowDrinkTextView: TextView
 
     var foodShopInfo: ShopInfoDto? = null
-    var drinkShopInfo : ShopInfoDto? = null
-
-
+    var drinkShopInfo: ShopInfoDto? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val act = activity as MainActivity
         pickShopFragmentBinding = FragmentPickShopBinding.inflate(inflater)
 
         nowFoodTextView = pickShopFragmentBinding.selectFood
         nowDrinkTextView = pickShopFragmentBinding.selectDrink
 
         pickShopFragmentBinding.shopCompleteBtn.setOnClickListener {
-            if(nowFoodTextView.text=="간식" || nowDrinkTextView.text=="음료") {
-                shopSelectFailedAlert()
+            if (nowFoodTextView.text == "간식" || nowDrinkTextView.text == "음료") {
+                shopSelectAlert("가게를 선택해주세요", "간식과 음료 가게를 선택 해주세요!!", "확인")
                 return@setOnClickListener
             }
-
-            mainViewModel.selectSnackShop(foodShopInfo!!.id,foodShopInfo!!.id)
-            act.nowSnackSet()
-            shopSelectSuccessAlert()
+            mainViewModel.selectSnackShop(foodShopInfo!!.id, drinkShopInfo!!.id)
+            shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
         }
         return pickShopFragmentBinding.root
     }
 
-    private fun shopSelectSuccessAlert() {
+    private fun shopSelectAlert(title: String, message: String, btnText: String) {
         val builder = AlertDialog.Builder(requireContext())
-
-        builder.setTitle("가게선택 완료")
-        builder.setMessage("가게선택 완료!!")
-
-        builder.setPositiveButton("확인!") { diologInterface, i ->
+        builder.apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton(btnText) { diologInterface, i -> }
+            show()
         }
-        builder.show()
-    }
-
-    private fun shopSelectFailedAlert() {
-        val builder = AlertDialog.Builder(requireContext())
-
-        builder.setTitle("가게를 선택해주세요")
-        builder.setMessage("간식과 음료 가게를 선택 해주세요!!")
-
-        builder.setPositiveButton("확인") { diologInterface, i ->
-        }
-        builder.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val foodShopInfoList = act.foodShopInfoList
-        val foodShopPickAdapter = createShopPickAdapter(SnackType.FOOD)
+
         pickShopFragmentBinding.foodShopBtn.setOnClickListener {
-            mainViewModel.fetchShopInfo(SnackType.FOOD)
-
-            mainViewModel.foodShopInfo.observe(viewLifecycleOwner){
-                foodShopPickAdapter.submitList(it)
-                val layoutInflater = LayoutInflater.from(context)
-                val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
-                val alertDialog = AlertDialog.Builder(requireContext())
-                    .setView(view)
-                    .create()
-                val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-                shopRecycler.apply {
-                    adapter = foodShopPickAdapter
-                    layoutManager = LinearLayoutManager(requireContext())
+            mainViewModel.apply {
+                fetchShopInfo(SnackType.FOOD)
+                foodShopInfo.observe(viewLifecycleOwner) {
+                    val foodShopPickAdapter = createShopPickAdapter(SnackType.FOOD)
+                    createShopPickDialog(foodShopPickAdapter, it)
                 }
-
-                nowDialog = alertDialog
-                alertDialog.show()
             }
         }
-
-        val drinkShopPickAdapter = createShopPickAdapter(SnackType.DRINK)
 
         pickShopFragmentBinding.drinkShopBtn.setOnClickListener {
-            mainViewModel.fetchShopInfo(SnackType.DRINK)
-
-            mainViewModel.drinkShopInfo.observe(viewLifecycleOwner){
-                drinkShopPickAdapter.submitList(it)
-                val layoutInflater = LayoutInflater.from(context)
-                val view = layoutInflater.inflate(R.layout.shop_pick_dialog,null)
-                val alertDialog = AlertDialog.Builder(requireContext())
-                    .setView(view)
-                    .create()
-                val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-
-                shopRecycler.adapter = drinkShopPickAdapter
-                shopRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-                nowDialog = alertDialog
-                alertDialog.show()
+            mainViewModel.apply {
+                fetchShopInfo(SnackType.DRINK)
+                drinkShopInfo.observe(viewLifecycleOwner) {
+                    val drinkShopPickAdapter = createShopPickAdapter(SnackType.DRINK)
+                    createShopPickDialog(drinkShopPickAdapter, it)
+                }
             }
-
         }
-
     }
 
+    private fun createShopPickDialog(
+        shopPickAdapter: ShopPickAdapter,
+        shopList: MutableList<ShopInfoDto>
+    ) {
+        shopPickAdapter.submitList(shopList)
+        val layoutInflater = LayoutInflater.from(context)
+        val view = layoutInflater.inflate(R.layout.shop_pick_dialog, null)
 
+        val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
+        shopRecycler.apply {
+            adapter = shopPickAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(view)
+            .create()
+
+        nowDialog = alertDialog
+        alertDialog.show()
+    }
 
     private fun createShopPickAdapter(snackType: SnackType): ShopPickAdapter {
-        val funVal: (ShopInfoDto) -> Unit = { shopInfo -> shopPickAdapterNameOnClick(shopInfo,snackType) }
+        val funVal: (ShopInfoDto) -> Unit =
+            { shopInfo -> shopPickAdapterNameOnClick(shopInfo, snackType) }
         val shopPickAdapter = ShopPickAdapter(funVal)
         return shopPickAdapter
     }
 
-    private fun shopPickAdapterNameOnClick(shopInfo: ShopInfoDto,snackType: SnackType){
-        Log.d("onclick","${shopInfo.shopName}")
+    private fun shopPickAdapterNameOnClick(shopInfo: ShopInfoDto, snackType: SnackType) {
+        Log.d("onclick", "${shopInfo.shopName}")
         // shop 선택 api 보내고
         // 받은 데이터를 view에 셋팅
-        if(snackType==SnackType.FOOD){
-            foodShopInfo=shopInfo
+        if (snackType == SnackType.FOOD) {
+            foodShopInfo = shopInfo
             nowFoodTextView.text = shopInfo.shopName
-        }
-        else if(snackType==SnackType.DRINK){
+        } else if (snackType == SnackType.DRINK) {
             drinkShopInfo = shopInfo
-            nowDrinkTextView.text =shopInfo.shopName
+            nowDrinkTextView.text = shopInfo.shopName
         }
         nowDialog!!.dismiss()
 
