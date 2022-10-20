@@ -1,5 +1,6 @@
-package com.ej.snackapp.dto
+package com.ej.snackapp.dto.response
 
+import com.ej.snackapp.dto.ResponseStatus
 import com.squareup.moshi.Json
 
 data class ApiResponse<T>(

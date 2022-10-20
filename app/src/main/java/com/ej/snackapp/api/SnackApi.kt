@@ -1,6 +1,8 @@
 package com.ej.snackapp.api
 
 import com.ej.snackapp.dto.*
+import com.ej.snackapp.dto.response.ApiResponse
+import com.ej.snackapp.dto.response.ShopIdDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PUT
@@ -10,6 +12,8 @@ interface SnackApi {
         const val firstUrl ="/api"
     }
 
+    @GET("${firstUrl}/snack")
+    suspend fun getShopId() : ApiResponse<ShopIdDto>
 
     @GET("${firstUrl}/snack/pick")
     suspend fun getUserPickInfo() : ApiResponse<MutableList<UserSnackInfoDto>>
