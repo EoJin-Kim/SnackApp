@@ -63,22 +63,9 @@ class MainActivity : FragmentActivity() {
             val job2 = scope.async {
                 getFoodSnackList()
             }
-
-            val job3 = scope.async{
-                getNowSnackType()
-            }
-//            job1.await()
-//            job2.await()
-//            job1.join()
-//            job2.join()
-//            job3.join()
-
         }
-
-
     }
     fun apiInit2(){
-
 
 
         runBlocking {
@@ -90,11 +77,6 @@ class MainActivity : FragmentActivity() {
             val job5 = scope.async{
                 getDrinkShopDetailInfo()
             }
-
-
-//            job4.await()
-//            job5.await()
-//            job6.await()
         }
     }
     fun getFoodSnackList() {
@@ -160,84 +142,8 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
-//        var result = CoroutineScope(Dispatchers.Default).async {
-//            val client = OkHttpClient()
-//
-//            val drinkUrl = "${ServerInfo.SERVER_URL}/api/shop/${snackType}"
-//
-//
-//            val foodRequest = Request.Builder().url(drinkUrl).build()
-//            val foodResponse = client.newCall(foodRequest).execute()
-//
-//            if (foodResponse.isSuccessful) {
-//                val resultText = foodResponse.body?.string()!!.trim()
-//                Log.d("test", resultText.toString())
-//                val root = JSONObject(resultText)
-//
-//                val data = root.getJSONArray("data")
-//                for (i in 0 until data.length()) {
-//                    val shopData = data.getJSONObject(i)
-//                    val id = shopData.getInt("id")
-//                    val shopName = shopData.getString("shopName")
-//                    val menuURI = shopData.getString("menuURI")
-//
-//                    val shopInfo = ShopInfo(id, shopName, menuURI,snackType)
-//
-//                    drinkShopInfoList.add(shopInfo)
-//                }
-//            }
-//            return@async
-//        }
-//        return result
-
-    fun getNowSnackType(){
-
-        val client = OkHttpClient()
-
-        val drinkUrl = "${ServerInfo.SERVER_URL}/api/snack"
-
-
-        val request = Request.Builder().url(drinkUrl).build()
-        val response = client.newCall(request).execute()
-
-        if (response.isSuccessful) {
-            val resultText = response.body?.string()!!.trim()
-            Log.d("test", resultText.toString())
-            val root = JSONObject(resultText)
-
-            val data = root.getJSONObject("data")
-            val foodId = data.getInt("foodId")
-            val drinkId = data.getInt("drinkId")
-
-            nowFoodId = foodId
-            nowDrinkId = drinkId
-        }
-
-
-    }
-
-    fun nowSnackSet() : Boolean{
-        if(nowFoodId == -1 || nowDrinkId ==-1) return false
-
-        for (shopInfo in foodShopInfoList) {
-            if(shopInfo.id==nowFoodId){
-                nowFoodType = shopInfo.shopName
-                break
-            }
-        }
-
-        for (shopInfo in drinkShopInfoList) {
-            if (shopInfo.id == nowDrinkId) {
-                nowDrinkType = shopInfo.shopName
-                break
-            }
-        }
-        return true
-    }
 
     fun getFoodShopDetailInfo(){
-
-
 
 
             val client = OkHttpClient()

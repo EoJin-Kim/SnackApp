@@ -33,22 +33,21 @@ import kotlin.concurrent.thread
 @AndroidEntryPoint
 class PickSnackFragment : Fragment() {
 
-    lateinit var pickSnackFragmentBinding : FragmentPickSnackBinding
-    val act by lazy{activity as MainActivity}
-    private val mainViewModel : MainViewModel by viewModels()
+    lateinit var pickSnackFragmentBinding: FragmentPickSnackBinding
+    val act by lazy { activity as MainActivity }
+    private val mainViewModel: MainViewModel by viewModels()
 
-    var foodpickAdapter : SnackPickAdapter? = null
-    var drinkPickAdapter : SnackPickAdapter? = null
+    var foodpickAdapter: SnackPickAdapter? = null
+    var drinkPickAdapter: SnackPickAdapter? = null
 
-    var selectSnack : TextView? = null
+    var selectSnack: TextView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val act  =activity as MainActivity
+        val act = activity as MainActivity
         act.apiInit1()
         act.apiInit2()
-        act.nowSnackSet()
     }
 
     override fun onCreateView(
@@ -67,23 +66,7 @@ class PickSnackFragment : Fragment() {
         val userPickAdapter = createUserPickAdapter()
 
 
-        val foodShopSnackList = act.foodShopDetailInfo.snackList
-        val drinkShopSnackList = act.drinkShopDetailInfo.snackList
-
-
-        foodShopSnackList?.observe(viewLifecycleOwner) {
-            it.let {
-                foodpickAdapter?.submitList(it)
-            }
-        }
-        drinkShopSnackList?.observe(viewLifecycleOwner){
-            it.let {
-                drinkPickAdapter?.submitList(it)
-            }
-        }
-
-
-        mainViewModel.userPickInfo.observe(viewLifecycleOwner){
+        mainViewModel.userPickInfo.observe(viewLifecycleOwner) {
             userPickAdapter.submitList(it)
         }
 
@@ -94,16 +77,20 @@ class PickSnackFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        pickSnackFragmentBinding.snackSwipe.setOnRefreshListener{
+        pickSnackFragmentBinding.snackSwipe.setOnRefreshListener {
             pickSnackFragmentBinding.nameInput.setText("")
 
-            val inputMethodManager = act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(pickSnackFragmentBinding.nameInput.windowToken,0)
+            val inputMethodManager =
+                act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(
+                pickSnackFragmentBinding.nameInput.windowToken,
+                0
+            )
             pickSnackFragmentBinding.snackSwipe.isRefreshing = false
         }
 
         pickSnackFragmentBinding.nameInput.setText("김어진")
-        val textChangeListener = object : TextWatcher{
+        val textChangeListener = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -119,7 +106,7 @@ class PickSnackFragment : Fragment() {
                     for (userinfo in mainViewModel.userPickInfo?.value!!) {
 
                         if (userinfo.name.contains(s.toString())) {
-                            Log.d("test","after : ${userinfo.name}")
+                            Log.d("test", "after : ${userinfo.name}")
                             filterUserSnackInfoDtoList.add(userinfo)
                         }
                     }
@@ -131,7 +118,7 @@ class PickSnackFragment : Fragment() {
         }
         pickSnackFragmentBinding.nameInput.addTextChangedListener(textChangeListener)
         pickSnackFragmentBinding.nameInput.setOnEditorActionListener { v, actionId, event ->
-            Log.d("key","enter")
+            Log.d("key", "enter")
             false
         }
 
@@ -145,8 +132,8 @@ class PickSnackFragment : Fragment() {
 
     }
 
-    private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo) : SnackPickAdapter{
-        val funVal : (String) -> Unit = { str ->snackPickAdapterOnClick(str) }
+    private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo): SnackPickAdapter {
+        val funVal: (String) -> Unit = { str -> snackPickAdapterOnClick(str) }
         val snackPickAdapter = SnackPickAdapter(funVal)
         snackPickAdapter.submitList(shopDetailInfo.snackList.value)
 
@@ -155,185 +142,37 @@ class PickSnackFragment : Fragment() {
 
     private fun createUserPickAdapter(): UserPickAdapter {
 //        val funVal: (UserSnackInfo) -> Unit = { userSnackInfo -> userPickAdapterNameOnClick(userSnackInfo) }
-        val funFoodBtnVal: (UserSnackInfoDto, Int) -> Unit = { userSnackInfo, position-> userFoodPickAdapterButtonOnClick(userSnackInfo,position) }
-        val funDrinkBtnVal: (UserSnackInfoDto, Int) -> Unit = { userSnackInfo, position-> userDrinkPickAdapterButtonOnClick(userSnackInfo,position) }
+        val funFoodBtnVal: (UserSnackInfoDto, Int) -> Unit =
+            { userSnackInfo, position -> userFoodPickAdapterButtonOnClick(userSnackInfo, position) }
+        val funDrinkBtnVal: (UserSnackInfoDto, Int) -> Unit = { userSnackInfo, position ->
+            userDrinkPickAdapterButtonOnClick(
+                userSnackInfo,
+                position
+            )
+        }
         val userPickAdapter = UserPickAdapter(funFoodBtnVal, funDrinkBtnVal)
 
         return userPickAdapter
     }
 
-    private fun snackPickAdapterOnClick(snackName : String){
-        selectSnack?.text=snackName
-        Log.d("onclick",snackName)
-    }
-
-    private fun userPickAdapterNameOnClick(userSnackInfoDto: UserSnackInfoDto){
-
-        Log.d("onclick","name click")
-    }
-
-    private fun userFoodPickAdapterButtonOnClick(userSnackInfoDto : UserSnackInfoDto, position: Int) : String{
-        val act = activity as MainActivity
-        Log.d("onclick","btn click")
-
-        val layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.snack_pick_dialog,null)
-        val alertDialog = AlertDialog.Builder(requireContext())
-            .setView(view)
-            .create()
-
-        val snackRecycler = view.findViewById<RecyclerView>(R.id.snack_recycler)
-        val shopNameText = view.findViewById<TextView>(R.id.shop_name)
-        selectSnack = view.findViewById<TextView>(R.id.select_snack)
-        val confirmButton = view.findViewById<View>(R.id.choice_btn)
-
-
-        snackRecycler.adapter = foodpickAdapter
-        snackRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-        shopNameText.text = act.nowFoodType
-
-        confirmButton.setOnClickListener{
-            val currentList = act.filterUserSnackInfoDtoList.value
-            val newList = act.filterUserSnackInfoDtoList.value?.clone() as ArrayList<UserSnackInfoDto>
-            val currentUser = currentList?.get(position)
-            val updateUser = currentUser?.copy()
-            updateUser?.food = selectSnack?.text.toString()
-            newList.set(position,updateUser!!)
-            act.filterUserSnackInfoDtoList.postValue(newList)
-            thread {
-                val client : OkHttpClient = OkHttpClient()
-                val site = "https://sheltered-castle-40247.herokuapp.com/api/snack/pick"
-                val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
-                val json : JSONObject = JSONObject()
-                json.put("memberId",currentUser.id)
-                json.put("option","")
-                json.put("snack",selectSnack?.text.toString())
-                json.put("snackType","FOOD")
-                val body = RequestBody.create(JSON, json.toString());
-
-//                val request = Request.Builder().url(url).build()
-//                val response = client.newCall(request).execute()
-                val request = Request.Builder()
-                    .url(site)
-                    .post(body)
-                    .build()
-
-                val response = client.newCall(request).execute()
-
-                if(response.isSuccessful){
-                    val resultText = response.body?.string()!!.trim()
-                    Log.d("test",resultText.toString())
-                    val root = JSONObject(resultText)
-
-
-                    val userSnackInfoDtoList2 = ArrayList<UserSnackInfoDto>()
-
-                    val data = root.getJSONArray("data")
-                    for (i in 0 until data.length()) {
-                        val userSnackData = data.getJSONObject(i)
-                        val id = userSnackData.getInt("id")
-                        val name = userSnackData.getString("name")
-                        val food = userSnackData.getString("food")
-                        val foodOption = userSnackData.getString("foodOption")
-                        val drink = userSnackData.getString("drink")
-                        val drinkOption = userSnackData.getString("drinkOption")
-                        val userInfo = UserSnackInfoDto(id,name, food, foodOption, drink, drinkOption)
-
-                        userSnackInfoDtoList2.add(userInfo)
-                    }
-//                    act.filterUserSnackInfoList.postValue(userSnackInfoList2)
-                    mainViewModel.userPickInfo.postValue(userSnackInfoDtoList2)
-
-                }
-            }
-            alertDialog.dismiss()
-        }
-        alertDialog.show()
-        return "btn!!"
+    private fun snackPickAdapterOnClick(snackName: String) {
+        selectSnack?.text = snackName
+        Log.d("onclick", snackName)
     }
 
 
-    private fun userDrinkPickAdapterButtonOnClick(userSnackInfoDto : UserSnackInfoDto, position: Int) : String{
-        val act = activity as MainActivity
-        Log.d("onclick","btn click")
-
-        val layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.snack_pick_dialog,null)
-        val alertDialog = AlertDialog.Builder(requireContext())
-            .setView(view)
-            .create()
-
-        val snackRecycler = view.findViewById<RecyclerView>(R.id.snack_recycler)
-        val shopNameText = view.findViewById<TextView>(R.id.shop_name)
-        selectSnack = view.findViewById<TextView>(R.id.select_snack)
-        val confirmButton = view.findViewById<View>(R.id.choice_btn)
-
-
-        snackRecycler.adapter = drinkPickAdapter
-        snackRecycler.layoutManager = LinearLayoutManager(requireContext())
-
-        shopNameText.text = act.nowDrinkType
-
-        confirmButton.setOnClickListener{
-            val currentList = act.filterUserSnackInfoDtoList.value
-            val newList = act.filterUserSnackInfoDtoList.value?.clone() as ArrayList<UserSnackInfoDto>
-            val currentUser = currentList?.get(position)
-            val updateUser = currentUser?.copy()
-            updateUser?.drink = selectSnack?.text.toString()
-            newList.set(position,updateUser!!)
-            act.filterUserSnackInfoDtoList.postValue(newList)
-            thread {
-                val client : OkHttpClient = OkHttpClient()
-                val site = "https://sheltered-castle-40247.herokuapp.com/api/snack/pick"
-                val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
-                val json : JSONObject = JSONObject()
-                json.put("memberId",currentUser.id)
-                json.put("option","")
-                json.put("snack",selectSnack?.text.toString())
-                json.put("snackType","DRINK")
-                val body = RequestBody.create(JSON, json.toString());
-
-//                val request = Request.Builder().url(url).build()
-//                val response = client.newCall(request).execute()
-                val request = Request.Builder()
-                    .url(site)
-                    .post(body)
-                    .build()
-
-                val response = client.newCall(request).execute()
-
-                if(response.isSuccessful){
-                    val resultText = response.body?.string()!!.trim()
-                    Log.d("test",resultText.toString())
-                    val root = JSONObject(resultText)
-
-
-                    val userSnackInfoDtoList2 = ArrayList<UserSnackInfoDto>()
-
-                    val data = root.getJSONArray("data")
-                    for (i in 0 until data.length()) {
-                        val userSnackData = data.getJSONObject(i)
-                        val id = userSnackData.getInt("id")
-                        val name = userSnackData.getString("name")
-                        val food = userSnackData.getString("food")
-                        val foodOption = userSnackData.getString("foodOption")
-                        val drink = userSnackData.getString("drink")
-                        val drinkOption = userSnackData.getString("drinkOption")
-                        val userInfo = UserSnackInfoDto(id,name, food, foodOption, drink, drinkOption)
-
-                        userSnackInfoDtoList2.add(userInfo)
-
-                    }
-//                    act.filterUserSnackInfoList.postValue(userSnackInfoList2)
-                    mainViewModel.userPickInfo.postValue(userSnackInfoDtoList2)
-
-                }
-            }
-            alertDialog.dismiss()
-        }
-        alertDialog.show()
-        return "btn!!"
+    private fun userFoodPickAdapterButtonOnClick(
+        userSnackInfoDto: UserSnackInfoDto,
+        position: Int
+    ): String {
+        return "a"
     }
 
+
+    private fun userDrinkPickAdapterButtonOnClick(
+        userSnackInfoDto: UserSnackInfoDto,
+        position: Int
+    ): String {
+        return "b"
+    }
 }
