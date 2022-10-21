@@ -9,8 +9,9 @@ import androidx.fragment.app.DialogFragment
 import com.ej.snackapp.R
 import com.ej.snackapp.databinding.FragmentResultSnackBinding
 import com.ej.snackapp.databinding.FragmentSnackSelectDialogBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SnackSelectFragmentDialog : DialogFragment() {
     lateinit var snackSelectFragmentDialogBinding: FragmentSnackSelectDialogBinding
 

@@ -32,8 +32,8 @@ class MainActivity : FragmentActivity() {
     var nowDrinkType = ""
 
 
-    var foodShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","", MutableLiveData())
-    var drinkShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","",MutableLiveData())
+    var foodShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","", mutableListOf<String>())
+    var drinkShopDetailInfo : ShopDetailInfo = ShopDetailInfo("","","",mutableListOf<String>())
 
     lateinit var mainActivityBinding: ActivityMainBinding
 
@@ -155,7 +155,7 @@ class MainActivity : FragmentActivity() {
                 drinkShopDetailInfo.shopName=shopName
                 drinkShopDetailInfo.snackType = snackType
                 drinkShopDetailInfo.menuURI = menuURI
-                drinkShopDetailInfo.snackList.postValue(snackList)
+                drinkShopDetailInfo.snackList=snackList
             }
 
 

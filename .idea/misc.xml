@@ -9,7 +9,9 @@
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.33" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.18958333333333333" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_shop_select_dialog.xml" value="0.359375" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_snack.xml" value="0.38958333333333334" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_snack_select_dialog.xml" value="0.359375" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/list_row.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/shop_pick_dialog.xml" value="0.3594871794871795" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/snack_list_row.xml" value="0.22708333333333333" />
@@ -22,11 +24,6 @@
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.3" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.25" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.3" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_shop_select_dialog.xml" value="0.36614583333333334" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_snack_select_dialog.xml" value="0.36614583333333334" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/list_row.xml" value="0.36614583333333334" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/shop_pick_dialog.xml" value="0.36614583333333334" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/snack_pick_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/snack_pick_row.xml" value="0.2887179487179487" />
         <entry key="..\:/and/SnackApp/app/src/main/res/menu/bottom_menu.xml" value="0.2265625" />
       </map>
