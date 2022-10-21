@@ -27,8 +27,8 @@ class PickShopFragment : Fragment() {
     lateinit var nowFoodTextView: TextView
     lateinit var nowDrinkTextView: TextView
 
-    lateinit var foodShopInfo: ShopInfoDto
-    lateinit var drinkShopInfo: ShopInfoDto
+    var foodShopInfo: ShopInfoDto? = null
+    var drinkShopInfo: ShopInfoDto? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +36,6 @@ class PickShopFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPickShopBinding.inflate(inflater)
-
-        nowFoodTextView = binding.selectFood
-        nowDrinkTextView = binding.selectDrink
-
-        binding.shopCompleteBtn.setOnClickListener {
-            if (nowFoodTextView.text == "간식" || nowDrinkTextView.text == "음료") {
-                shopSelectAlert("가게를 선택해주세요", "간식과 음료 가게를 선택 해주세요!!", "확인")
-                return@setOnClickListener
-            }
-            mainViewModel.selectSnackShop(foodShopInfo!!.id, drinkShopInfo!!.id)
-            shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
-        }
         return binding.root
     }
 
@@ -67,6 +55,18 @@ class PickShopFragment : Fragment() {
         nowFoodTextView = binding.selectFood
         nowDrinkTextView = binding.selectDrink
 
+        binding.shopCompleteBtn.setOnClickListener {
+
+            if (foodShopInfo==null || drinkShopInfo == null) {
+                shopSelectAlert("가게를 선택해주세요", "간식과 음료 가게를 선택 해주세요!!", "확인")
+            }
+            else{
+                mainViewModel.selectSnackShop(foodShopInfo!!.id, drinkShopInfo!!.id)
+                shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
+            }
+
+        }
+
         binding.foodShopBtn.setOnClickListener {
             createShopPickDialog(SnackType.FOOD)
         }
@@ -83,7 +83,6 @@ class PickShopFragment : Fragment() {
         val dialog : ShopSelectFragmentDialog = ShopSelectFragmentDialog.newInstance(funPickShopVal,snackType)
 
         dialog.show(act.supportFragmentManager,"가게 선택")
-
     }
 
     private fun dialogPickShop(shopInfoDto:ShopInfoDto,snackType: SnackType) {

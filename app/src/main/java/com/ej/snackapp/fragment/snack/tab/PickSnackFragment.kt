@@ -29,13 +29,10 @@ import kotlin.concurrent.thread
 class PickSnackFragment : Fragment() {
 
     lateinit var pickSnackFragmentBinding: FragmentPickSnackBinding
+
     val act by lazy { activity as MainActivity }
     private val mainViewModel: MainViewModel by viewModels()
-
-//    var foodpickAdapter: SnackPickAdapter? = null
-//    var drinkPickAdapter: SnackPickAdapter? = null
-
-    var selectSnack: TextView? = null
+    lateinit var selectSnack: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

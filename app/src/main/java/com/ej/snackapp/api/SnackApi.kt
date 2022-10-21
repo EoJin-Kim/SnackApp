@@ -20,8 +20,8 @@ interface SnackApi {
     @GET("${firstUrl}/snack/pick")
     suspend fun getUserPickInfo() : ApiResponse<MutableList<UserSnackInfoDto>>
 
-    @GET("${firstUrl}/shop/FOOD")
-    suspend fun getFoodShopInfo(): ApiResponse<MutableList<ShopInfoDto>>
+    @GET("${firstUrl}/shop/{snackType}")
+    suspend fun getShopInfo(@Path("snackType") snackType: SnackType): ApiResponse<MutableList<ShopInfoDto>>
 
     @GET("${firstUrl}/shop/DRINK")
     suspend fun getDrinkShopInfo(): ApiResponse<MutableList<ShopInfoDto>>

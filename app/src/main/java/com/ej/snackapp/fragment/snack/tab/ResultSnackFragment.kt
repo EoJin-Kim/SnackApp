@@ -15,12 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ResultSnackFragment : Fragment() {
     lateinit var resultSnackFragmentBinding : FragmentResultSnackBinding
 
-
     private val mainViewModel : MainViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +23,6 @@ class ResultSnackFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         resultSnackFragmentBinding = FragmentResultSnackBinding.inflate(inflater)
-
         return resultSnackFragmentBinding.root
     }
 

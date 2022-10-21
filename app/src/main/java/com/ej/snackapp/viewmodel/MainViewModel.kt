@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
     val foodShopDetailInfo = MutableLiveData<ShopDetailInfo>()
     val drinkShopDetailInfo = MutableLiveData<ShopDetailInfo>()
 
-    val updateCheck = MutableLiveData<String>()
+    val shopUpdateCheck = MutableLiveData<String>()
 
     var foodShopId = 0L
     var drinkShopId = 0L
@@ -45,22 +45,22 @@ class MainViewModel @Inject constructor(
     fun fetchShopInfo(snackType: SnackType){
         viewModelScope.launch {
             if(snackType.equals(SnackType.FOOD)){
-                foodShopInfo.value = snackApi.getFoodShopInfo().data!!
+                foodShopInfo.value = snackApi.getShopInfo(snackType).data!!
             }
             else if(snackType.equals(SnackType.DRINK)){
-                drinkShopInfo.value = snackApi.getDrinkShopInfo().data!!
+                drinkShopInfo.value = snackApi.getShopInfo(snackType).data!!
             }
-
         }
     }
 
     fun selectSnackShop(foodShopId: Long, drinkShopId: Long) {
         viewModelScope.launch {
-            updateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShopId,drinkShopId)).data!!
+            shopUpdateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShopId,drinkShopId)).data!!
             this@MainViewModel.foodShopId = foodShopId
             this@MainViewModel.drinkShopId = drinkShopId
         }
     }
+
     fun fetchFoodShopMenuInfo(){
         viewModelScope.launch {
             foodShopDetailInfo.value = snackApi.getFoodShopDetailInfo(foodShopId).data!!
