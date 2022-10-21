@@ -1,4 +1,4 @@
-package com.ej.snackapp.info
+package com.ej.snackapp.dto
 
 class ShopInfo {
     val id : Int

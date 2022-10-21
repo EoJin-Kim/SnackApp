@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.ej.snackapp.databinding.ActivityMainBinding
 import com.ej.snackapp.info.ServerInfo
-import com.ej.snackapp.info.ShopDetailInfo
-import com.ej.snackapp.info.ShopInfo
+import com.ej.snackapp.dto.ShopDetailInfo
+import com.ej.snackapp.dto.ShopInfo
 import com.ej.snackapp.dto.UserSnackInfoDto
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -50,29 +50,12 @@ class MainActivity : FragmentActivity() {
     }
 
 
-
-
-    fun apiInit1() {
-
-        runBlocking{
-            val scope = CoroutineScope(Dispatchers.IO)
-
-            val job1 = async(Dispatchers.IO) {
-                getDrinkSnackList()
-            }
-            val job2 = scope.async {
-                getFoodSnackList()
-            }
-        }
-    }
     fun apiInit2(){
 
 
         runBlocking {
             val scope = CoroutineScope(Dispatchers.IO)
-            val job4 = scope.async {
-                getFoodShopDetailInfo()
-            }
+
 
             val job5 = scope.async{
                 getDrinkShopDetailInfo()
@@ -143,43 +126,6 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    fun getFoodShopDetailInfo(){
-
-
-            val client = OkHttpClient()
-
-            val url = "${ServerInfo.SERVER_URL}/api/shop/FOOD/${nowFoodId}"
-
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            if (response.isSuccessful) {
-                val resultText = response.body?.string()!!.trim()
-                Log.d("test", resultText.toString())
-                val root = JSONObject(resultText)
-
-
-                val data = root.getJSONObject("data")
-                val shopName = data.getString("shopName")
-                val snackType = data.getString("snackType")
-                val menuURI = data.getString("menuURI")
-                val snackListData = data.getJSONArray("snackList")
-                val snackList = ArrayList<String>()
-                for (i in 0 until snackListData.length()) {
-                    val snackName = snackListData.get(i).toString()
-                    snackList.add(snackName)
-                }
-                foodShopDetailInfo.shopName=shopName
-                foodShopDetailInfo.snackType = snackType
-                foodShopDetailInfo.menuURI = menuURI
-                foodShopDetailInfo.snackList.postValue(snackList)
-
-            }
-
-
-
-
-    }
 
     fun getDrinkShopDetailInfo() {
 

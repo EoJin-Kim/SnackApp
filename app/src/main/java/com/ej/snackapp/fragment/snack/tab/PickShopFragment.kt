@@ -1,4 +1,4 @@
-package com.ej.snackapp.fragment.bottom.snack.tab
+package com.ej.snackapp.fragment.snack.tab
 
 import android.os.Bundle
 import android.util.Log
@@ -9,14 +9,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.MainActivity
-import com.ej.snackapp.R
 import com.ej.snackapp.adapter.ShopPickAdapter
 import com.ej.snackapp.databinding.FragmentPickShopBinding
 import com.ej.snackapp.dto.ShopInfoDto
 import com.ej.snackapp.dto.SnackType
+import com.ej.snackapp.fragment.dialog.ShopSelectFragmentDialog
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -70,52 +68,32 @@ class PickShopFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         pickShopFragmentBinding.foodShopBtn.setOnClickListener {
-            mainViewModel.apply {
-                fetchShopInfo(SnackType.FOOD)
-                foodShopInfo.observe(viewLifecycleOwner) {
-                    val foodShopPickAdapter = createShopPickAdapter(SnackType.FOOD)
-                    createShopPickDialog(foodShopPickAdapter, it)
-                }
-            }
+            createShopPickDialog(SnackType.FOOD)
         }
 
         pickShopFragmentBinding.drinkShopBtn.setOnClickListener {
-            mainViewModel.apply {
-                fetchShopInfo(SnackType.DRINK)
-                drinkShopInfo.observe(viewLifecycleOwner) {
-                    val drinkShopPickAdapter = createShopPickAdapter(SnackType.DRINK)
-                    createShopPickDialog(drinkShopPickAdapter, it)
-                }
-            }
+            createShopPickDialog(SnackType.DRINK)
         }
     }
 
     private fun createShopPickDialog(
-        shopPickAdapter: ShopPickAdapter,
-        shopList: MutableList<ShopInfoDto>
+        snackType: SnackType
     ) {
-        shopPickAdapter.submitList(shopList)
-        val layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.shop_pick_dialog, null)
+        val funCreateGroupVal : (ShopInfoDto,SnackType) -> Unit = { shopInfoDto,snackType -> dialogPickShop(shopInfoDto,snackType)}
+        val dialog = ShopSelectFragmentDialog.newInstance(funCreateGroupVal,snackType)
 
-        val shopRecycler = view.findViewById<RecyclerView>(R.id.shop_recycler)
-        shopRecycler.apply {
-            adapter = shopPickAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
+        dialog.show(act.supportFragmentManager,"가게 선택")
 
-        val alertDialog = AlertDialog.Builder(requireContext())
-            .setView(view)
-            .create()
+    }
 
-        nowDialog = alertDialog
-        alertDialog.show()
+    private fun dialogPickShop(shopInfoDto:ShopInfoDto,snackType: SnackType) {
+
     }
 
     private fun createShopPickAdapter(snackType: SnackType): ShopPickAdapter {
-        val funVal: (ShopInfoDto) -> Unit =
-            { shopInfo -> shopPickAdapterNameOnClick(shopInfo, snackType) }
-        val shopPickAdapter = ShopPickAdapter(funVal)
+        val funVal: (ShopInfoDto,SnackType) -> Unit =
+            { shopInfo,snackType -> shopPickAdapterNameOnClick(shopInfo, snackType) }
+        val shopPickAdapter = ShopPickAdapter(funVal,snackType)
         return shopPickAdapter
     }
 

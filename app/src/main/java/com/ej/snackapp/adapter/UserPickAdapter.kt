@@ -9,18 +9,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
+import com.ej.snackapp.dto.SnackType
 import com.ej.snackapp.dto.UserSnackInfoDto
 
 class UserPickAdapter(
-    private val onClick1: (UserSnackInfoDto, Int) -> Unit,
-    private val onClick2: (UserSnackInfoDto, Int) -> Unit
+    private val onClick: (SnackType) -> Unit,
 )  : ListAdapter<UserSnackInfoDto,UserPickAdapter.UserPickViewHolder>(UserPickDiffCallback){
 
 
     class UserPickViewHolder(
-        itemView : View,
-        val onClick1: (UserSnackInfoDto, Int) -> Unit,
-        val onClick2: (UserSnackInfoDto, Int) -> Unit
+        itemView: View,
+        val onClick: (SnackType) -> Unit,
     ) : RecyclerView.ViewHolder(itemView){
 
         private val usernameTextView : TextView = itemView.findViewById(R.id.snack_pick_name)
@@ -29,18 +28,11 @@ class UserPickAdapter(
         private var currentPickUser : UserSnackInfoDto? = null
 
         init {
-//            itemView.setOnClickListener {
-////                currentPickUser?.let{
-////                    onClick(it)
-////                }
-//                onClick1(currentPickUser!!)
-//            }
             foodPickBtn.setOnClickListener {
-                onClick1(currentPickUser!!, layoutPosition)
-//                foodPickBtn.setText(onClick2())
+                onClick(SnackType.FOOD)
             }
             drinkPickBtn.setOnClickListener {
-                onClick2(currentPickUser!!,layoutPosition)
+                onClick(SnackType.DRINK)
             }
         }
 
@@ -67,7 +59,7 @@ class UserPickAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserPickViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.snack_pick_row,parent,false)
-        val holder = UserPickViewHolder(view,onClick1,onClick2)
+        val holder = UserPickViewHolder(view,onClick)
         return holder
     }
 

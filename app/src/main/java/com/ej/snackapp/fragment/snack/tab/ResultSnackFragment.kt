@@ -1,4 +1,4 @@
-package com.ej.snackapp.fragment.bottom.snack.tab
+package com.ej.snackapp.fragment.snack.tab
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

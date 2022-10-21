@@ -22,6 +22,11 @@
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.3" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.25" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.3" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_shop_select_dialog.xml" value="0.36614583333333334" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_snack_select_dialog.xml" value="0.36614583333333334" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/list_row.xml" value="0.36614583333333334" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/shop_pick_dialog.xml" value="0.36614583333333334" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/snack_pick_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/snack_pick_row.xml" value="0.2887179487179487" />
         <entry key="..\:/and/SnackApp/app/src/main/res/menu/bottom_menu.xml" value="0.2265625" />
       </map>

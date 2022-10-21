@@ -8,7 +8,7 @@
     android:elevation="3dp"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".fragment.bottom.snack.tab.PickShopFragment">
+    tools:context=".fragment.snack.tab.PickShopFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

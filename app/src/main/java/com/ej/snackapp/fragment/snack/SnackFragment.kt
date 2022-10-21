@@ -1,4 +1,4 @@
-package com.ej.snackapp.fragment.bottom.snack
+package com.ej.snackapp.fragment.snack
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentSnackBinding
-import com.ej.snackapp.fragment.bottom.snack.tab.PickShopFragment
-import com.ej.snackapp.fragment.bottom.snack.tab.PickSnackFragment
-import com.ej.snackapp.fragment.bottom.snack.tab.ResultSnackFragment
+import com.ej.snackapp.fragment.snack.tab.PickShopFragment
+import com.ej.snackapp.fragment.snack.tab.PickSnackFragment
+import com.ej.snackapp.fragment.snack.tab.ResultSnackFragment
 import com.ej.snackapp.viewmodel.MainViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -48,7 +48,7 @@ class SnackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter1 = object : FragmentStateAdapter(this) {
+        val tabAdapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
                 return fragList.size
             }
@@ -59,7 +59,7 @@ class SnackFragment : Fragment() {
         }
 
 
-        snackFragmentBinding.pager2.adapter = adapter1
+        snackFragmentBinding.pager2.adapter = tabAdapter
 
         // tab과 viewpager를 연결한다다
         TabLayoutMediator(

@@ -3,9 +3,11 @@ package com.ej.snackapp.api
 import com.ej.snackapp.dto.*
 import com.ej.snackapp.dto.response.ApiResponse
 import com.ej.snackapp.dto.response.ShopIdDto
+import com.ej.snackapp.dto.ShopDetailInfo
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface SnackApi {
     companion object{
@@ -26,5 +28,11 @@ interface SnackApi {
 
     @PUT("${firstUrl}/snack/snackshop")
     suspend fun updateSnackShop(@Body snackShopDto: SnackShopDto): ApiResponse<String>
+
+    @PUT("${firstUrl}/shop/FOOD/{shopId}")
+    suspend fun getFoodShopDetailInfo(@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
+
+    @PUT("${firstUrl}/shop/DRINK/{shopId}")
+    suspend fun getDrinkShopDetailInfo(@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
 
 }

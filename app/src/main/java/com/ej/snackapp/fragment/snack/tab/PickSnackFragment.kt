@@ -1,4 +1,4 @@
-package com.ej.snackapp.fragment.bottom.snack.tab
+package com.ej.snackapp.fragment.snack.tab
 
 import android.content.Context
 import android.os.Bundle
@@ -19,15 +19,10 @@ import com.ej.snackapp.*
 import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
+import com.ej.snackapp.dto.SnackType
 import com.ej.snackapp.dto.UserSnackInfoDto
-import com.ej.snackapp.info.ShopDetailInfo
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import org.json.JSONObject
 import kotlin.concurrent.thread
 
 @AndroidEntryPoint
@@ -37,16 +32,14 @@ class PickSnackFragment : Fragment() {
     val act by lazy { activity as MainActivity }
     private val mainViewModel: MainViewModel by viewModels()
 
-    var foodpickAdapter: SnackPickAdapter? = null
-    var drinkPickAdapter: SnackPickAdapter? = null
+//    var foodpickAdapter: SnackPickAdapter? = null
+//    var drinkPickAdapter: SnackPickAdapter? = null
 
     var selectSnack: TextView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val act = activity as MainActivity
-        act.apiInit1()
         act.apiInit2()
     }
 
@@ -59,23 +52,9 @@ class PickSnackFragment : Fragment() {
         pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
 
 
-
-        foodpickAdapter = createSnackPickAdapter(act.foodShopDetailInfo)
-        drinkPickAdapter = createSnackPickAdapter(act.drinkShopDetailInfo)
-
-        val userPickAdapter = createUserPickAdapter()
+//        drinkPickAdapter = createSnackPickAdapter(SnackType.DRINK)
 
 
-        mainViewModel.userPickInfo.observe(viewLifecycleOwner) {
-            userPickAdapter.submitList(it)
-        }
-
-
-        val recyclerView = pickSnackFragmentBinding.pickSnackRecycler
-        recyclerView.adapter = userPickAdapter
-
-
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         pickSnackFragmentBinding.snackSwipe.setOnRefreshListener {
             pickSnackFragmentBinding.nameInput.setText("")
@@ -128,31 +107,40 @@ class PickSnackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val userPickAdapter = createUserPickAdapter()
+
+        mainViewModel.userPickInfo.observe(viewLifecycleOwner) {
+            userPickAdapter.submitList(it)
+        }
+
+        val recyclerView = pickSnackFragmentBinding.pickSnackRecycler
+        recyclerView.apply {
+            adapter = userPickAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
         mainViewModel.fetchUserPickInfo()
 
     }
 
-    private fun createSnackPickAdapter(shopDetailInfo: ShopDetailInfo): SnackPickAdapter {
+    private fun createSnackPickAdapter(snackType: SnackType): SnackPickAdapter {
         val funVal: (String) -> Unit = { str -> snackPickAdapterOnClick(str) }
         val snackPickAdapter = SnackPickAdapter(funVal)
-        snackPickAdapter.submitList(shopDetailInfo.snackList.value)
-
         return snackPickAdapter
     }
 
     private fun createUserPickAdapter(): UserPickAdapter {
-//        val funVal: (UserSnackInfo) -> Unit = { userSnackInfo -> userPickAdapterNameOnClick(userSnackInfo) }
-        val funFoodBtnVal: (UserSnackInfoDto, Int) -> Unit =
-            { userSnackInfo, position -> userFoodPickAdapterButtonOnClick(userSnackInfo, position) }
-        val funDrinkBtnVal: (UserSnackInfoDto, Int) -> Unit = { userSnackInfo, position ->
-            userDrinkPickAdapterButtonOnClick(
-                userSnackInfo,
-                position
-            )
-        }
-        val userPickAdapter = UserPickAdapter(funFoodBtnVal, funDrinkBtnVal)
+        val funSnackBtn: (SnackType) -> Unit = { snackType ->
+            createSnackPickDialog(snackType) }
+
+        val userPickAdapter = UserPickAdapter(funSnackBtn)
 
         return userPickAdapter
+    }
+
+    private fun createSnackPickDialog(snackType: SnackType) {
+
+
     }
 
     private fun snackPickAdapterOnClick(snackName: String) {
@@ -161,18 +149,35 @@ class PickSnackFragment : Fragment() {
     }
 
 
+    // 사용자가 간식 선택 버튼 클릭 시
     private fun userFoodPickAdapterButtonOnClick(
         userSnackInfoDto: UserSnackInfoDto,
-        position: Int
     ): String {
+
+
+
+
+
+//        if(snackType==SnackType.FOOD){
+//            mainViewModel.foodShopDetailInfo.observe(viewLifecycleOwner){
+//                snackPickAdapter.submitList(it.snackList)
+//            }
+//            mainViewModel.fetchFoodShopMenuInfo()
+//        }
+//        else if(snackType==SnackType.DRINK){
+//            mainViewModel.drinkShopDetailInfo.observe(viewLifecycleOwner){
+//                snackPickAdapter.submitList(it.snackList)
+//            }
+//            mainViewModel.fetchDrinkShopMenuInfo()
+//        }
         return "a"
     }
 
 
     private fun userDrinkPickAdapterButtonOnClick(
         userSnackInfoDto: UserSnackInfoDto,
-        position: Int
     ): String {
         return "b"
     }
+
 }

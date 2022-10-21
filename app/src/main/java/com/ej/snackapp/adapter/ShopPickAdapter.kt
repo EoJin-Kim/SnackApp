@@ -9,14 +9,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
 import com.ej.snackapp.dto.ShopInfoDto
-import com.ej.snackapp.info.ShopInfo
+import com.ej.snackapp.dto.SnackType
 
-class ShopPickAdapter(private val onClick: (ShopInfoDto) -> Unit)
+class ShopPickAdapter(
+    private val onClick: (ShopInfoDto,SnackType) -> Unit,
+    private val snackType: SnackType,
+)
     : ListAdapter<ShopInfoDto, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
 
     class ShopPickViewHolder(
         itemView : View,
-        val onClick: (ShopInfoDto) -> Unit,
+        val onClick: (ShopInfoDto,SnackType) -> Unit,
+        val snackType: SnackType,
     ) : RecyclerView.ViewHolder(itemView){
 
         private var shopNameTextView : TextView = itemView.findViewById(R.id.one_name)
@@ -24,7 +28,7 @@ class ShopPickAdapter(private val onClick: (ShopInfoDto) -> Unit)
 
         init{
             itemView.setOnClickListener {
-                onClick(shopInfo!!)
+                onClick(shopInfo!!,snackType)
             }
         }
 
@@ -38,7 +42,7 @@ class ShopPickAdapter(private val onClick: (ShopInfoDto) -> Unit)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopPickViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_row, parent, false)
-        return ShopPickAdapter.ShopPickViewHolder(view, onClick)
+        return ShopPickAdapter.ShopPickViewHolder(view, onClick,snackType)
     }
 
     override fun onBindViewHolder(holder: ShopPickViewHolder, position: Int) {

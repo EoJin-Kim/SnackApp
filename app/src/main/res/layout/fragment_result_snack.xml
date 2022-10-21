@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/main_background"
     android:orientation="vertical"
-    tools:context=".fragment.bottom.snack.tab.ResultSnackFragment">
+    tools:context=".fragment.snack.tab.ResultSnackFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

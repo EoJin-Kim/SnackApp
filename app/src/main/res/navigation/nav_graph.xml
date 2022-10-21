@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/snackFragment"
-        android:name="com.ej.snackapp.fragment.bottom.snack.SnackFragment"
+        android:name="com.ej.snackapp.fragment.snack.SnackFragment"
         android:label="SnackFragment"
         tools:layout="@layout/fragment_snack">
         <action
@@ -22,17 +22,17 @@
     </fragment>
     <fragment
         android:id="@+id/pickShopFragment"
-        android:name="com.ej.snackapp.fragment.bottom.snack.tab.PickShopFragment"
+        android:name="com.ej.snackapp.fragment.snack.tab.PickShopFragment"
         android:label="fragment_pick_shop"
         tools:layout="@layout/fragment_pick_shop" />
     <fragment
         android:id="@+id/pickSnackFragment"
-        android:name="com.ej.snackapp.fragment.bottom.snack.tab.PickSnackFragment"
+        android:name="com.ej.snackapp.fragment.snack.tab.PickSnackFragment"
         android:label="fragment_pick_snack"
         tools:layout="@layout/fragment_pick_snack" />
     <fragment
         android:id="@+id/resultSnackFragment"
-        android:name="com.ej.snackapp.fragment.bottom.snack.tab.ResultSnackFragment"
+        android:name="com.ej.snackapp.fragment.snack.tab.ResultSnackFragment"
         android:label="fragment_result_snack"
         tools:layout="@layout/fragment_result_snack" />
 </navigation>
