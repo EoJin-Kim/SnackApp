@@ -1,18 +1,19 @@
 package com.ej.snackapp.fragment.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.ej.snackapp.R
-import com.ej.snackapp.databinding.FragmentResultSnackBinding
 import com.ej.snackapp.databinding.FragmentSnackSelectDialogBinding
+import com.ej.snackapp.dto.SnackType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SnackSelectFragmentDialog : DialogFragment() {
+class SnackSelectFragmentDialog(
+    private val pickSnackFun: (String) -> Unit,
+    private val snackType: SnackType
+) : DialogFragment() {
     lateinit var snackSelectFragmentDialogBinding: FragmentSnackSelectDialogBinding
 
     override fun onCreateView(
@@ -26,6 +27,6 @@ class SnackSelectFragmentDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = SnackSelectFragmentDialog()
+        fun newInstance(pickSnackFun: (String) -> Unit, snackType: SnackType) = SnackSelectFragmentDialog(pickSnackFun,snackType)
     }
 }

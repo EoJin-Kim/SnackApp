@@ -13,8 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ResultSnackFragment : Fragment() {
-    lateinit var resultSnackFragmentBinding : FragmentResultSnackBinding
+    lateinit var binding : FragmentResultSnackBinding
 
+    val act by lazy { activity as MainActivity }
     private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreateView(
@@ -22,26 +23,24 @@ class ResultSnackFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        resultSnackFragmentBinding = FragmentResultSnackBinding.inflate(inflater)
-        return resultSnackFragmentBinding.root
+        binding = FragmentResultSnackBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        val act = activity as MainActivity
         val foodResultSb =StringBuilder()
         val drinkResultSb =StringBuilder()
         getResultSnack(foodResultSb,drinkResultSb)
 
-        resultSnackFragmentBinding.foodType.text = act.nowFoodType
-        resultSnackFragmentBinding.drinkType.text = act.nowDrinkType
+        binding.foodType.text = mainViewModel.foodShopDetailInfo.value!!.shopName
+        binding.drinkType.text = mainViewModel.foodShopDetailInfo.value!!.shopName
 
-        resultSnackFragmentBinding.foodResult.setText(foodResultSb.toString())
-        resultSnackFragmentBinding.drinkResult.setText(drinkResultSb.toString())
+        binding.foodResult.setText(foodResultSb.toString())
+        binding.drinkResult.setText(drinkResultSb.toString())
     }
 
     fun getResultSnack(foodResultSb: StringBuilder, drinkResultSb : StringBuilder) {
-        val act = activity as MainActivity
 
         val foodMap: MutableMap<String,Int> = mutableMapOf()
         val drinkMap: MutableMap<String,Int> = mutableMapOf()

@@ -10,17 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.*
 import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
 import com.ej.snackapp.dto.SnackType
 import com.ej.snackapp.dto.UserSnackInfoDto
+import com.ej.snackapp.fragment.dialog.SnackSelectFragmentDialog
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.concurrent.thread
@@ -28,44 +26,50 @@ import kotlin.concurrent.thread
 @AndroidEntryPoint
 class PickSnackFragment : Fragment() {
 
-    lateinit var pickSnackFragmentBinding: FragmentPickSnackBinding
+    lateinit var binding: FragmentPickSnackBinding
 
     val act by lazy { activity as MainActivity }
     private val mainViewModel: MainViewModel by viewModels()
-    lateinit var selectSnack: TextView
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        act.apiInit2()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        binding = FragmentPickSnackBinding.inflate(inflater)
+        return binding.root
+    }
 
-        pickSnackFragmentBinding = FragmentPickSnackBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        // 사용자 간식 선택 리스트 recycler 데이터 셋팅
+        setRecyclerData()
 
-//        drinkPickAdapter = createSnackPickAdapter(SnackType.DRINK)
+        // 테스트 용 필터 이름 셋팅
+        binding.nameInput.setText("김어진")
+        // 이름 필터링 함수
+        nameFiltering()
 
+        // swipe시 새로고침
+        setSwipe()
+    }
 
+    private fun setRecyclerData() {
+        val userPickAdapter = createUserPickAdapter()
 
-        pickSnackFragmentBinding.snackSwipe.setOnRefreshListener {
-            pickSnackFragmentBinding.nameInput.setText("")
-
-            val inputMethodManager =
-                act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(
-                pickSnackFragmentBinding.nameInput.windowToken,
-                0
-            )
-            pickSnackFragmentBinding.snackSwipe.isRefreshing = false
+        mainViewModel.userPickInfo.observe(viewLifecycleOwner) {
+            userPickAdapter.submitList(it)
+        }
+        binding.pickSnackRecycler.apply {
+            adapter = userPickAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
 
-        pickSnackFragmentBinding.nameInput.setText("김어진")
+        mainViewModel.fetchUserPickInfo()
+    }
+
+    private fun nameFiltering() {
         val textChangeListener = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -74,10 +78,7 @@ class PickSnackFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
-
                 thread {
-//                    act.filterUserSnackInfoList.clear()
                     val filterUserSnackInfoDtoList = ArrayList<UserSnackInfoDto>()
                     for (userinfo in mainViewModel.userPickInfo?.value!!) {
 
@@ -87,93 +88,57 @@ class PickSnackFragment : Fragment() {
                         }
                     }
                     act.filterUserSnackInfoDtoList.postValue(filterUserSnackInfoDtoList)
-
                 }
-
             }
         }
-        pickSnackFragmentBinding.nameInput.addTextChangedListener(textChangeListener)
-        pickSnackFragmentBinding.nameInput.setOnEditorActionListener { v, actionId, event ->
+        binding.nameInput.addTextChangedListener(textChangeListener)
+        binding.nameInput.setOnEditorActionListener { v, actionId, event ->
             Log.d("key", "enter")
             false
         }
-
-        return pickSnackFragmentBinding.root
-
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val userPickAdapter = createUserPickAdapter()
-
-        mainViewModel.userPickInfo.observe(viewLifecycleOwner) {
-            userPickAdapter.submitList(it)
+    private fun setSwipe() {
+        binding.snackSwipe.setOnRefreshListener {
+            binding.nameInput.setText("")
+            val inputMethodManager =
+                act.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(binding.nameInput.windowToken, 0)
+            binding.snackSwipe.isRefreshing = false
         }
-
-        val recyclerView = pickSnackFragmentBinding.pickSnackRecycler
-        recyclerView.apply {
-            adapter = userPickAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        mainViewModel.fetchUserPickInfo()
-
     }
 
     private fun createSnackPickAdapter(snackType: SnackType): SnackPickAdapter {
-        val funVal: (String) -> Unit = { str -> snackPickAdapterOnClick(str) }
+        val funVal: (String) -> Unit = { str -> dialogPickSnackOnClick(str) }
         val snackPickAdapter = SnackPickAdapter(funVal)
         return snackPickAdapter
     }
 
     private fun createUserPickAdapter(): UserPickAdapter {
-        val funSnackBtn: (SnackType) -> Unit = { snackType ->
-            createSnackPickDialog(snackType) }
-
+        val funSnackBtn: (SnackType) -> Unit = { snackType -> createSnackPickDialog(snackType) }
         val userPickAdapter = UserPickAdapter(funSnackBtn)
-
         return userPickAdapter
     }
 
-    private fun createSnackPickDialog(snackType: SnackType) {
+    private fun createSnackPickDialog(snackType:SnackType) {
+        val funPickSnackVal : (String) -> Unit = { snack -> dialogPickSnackOnClick(snack)}
+        val dialog : SnackSelectFragmentDialog = SnackSelectFragmentDialog.newInstance(funPickSnackVal,snackType)
 
-
+        dialog.show(act.supportFragmentManager,"가게 선택")
     }
 
-    private fun snackPickAdapterOnClick(snackName: String) {
-        selectSnack?.text = snackName
+    private fun dialogPickSnackOnClick(snackName: String) {
         Log.d("onclick", snackName)
     }
 
 
     // 사용자가 간식 선택 버튼 클릭 시
-    private fun userFoodPickAdapterButtonOnClick(
-        userSnackInfoDto: UserSnackInfoDto,
-    ): String {
-
-
-
-
-
-//        if(snackType==SnackType.FOOD){
-//            mainViewModel.foodShopDetailInfo.observe(viewLifecycleOwner){
-//                snackPickAdapter.submitList(it.snackList)
-//            }
-//            mainViewModel.fetchFoodShopMenuInfo()
-//        }
-//        else if(snackType==SnackType.DRINK){
-//            mainViewModel.drinkShopDetailInfo.observe(viewLifecycleOwner){
-//                snackPickAdapter.submitList(it.snackList)
-//            }
-//            mainViewModel.fetchDrinkShopMenuInfo()
-//        }
+    private fun userFoodPickAdapterButtonOnClick(userSnackInfoDto: UserSnackInfoDto): String {
         return "a"
     }
 
 
-    private fun userDrinkPickAdapterButtonOnClick(
-        userSnackInfoDto: UserSnackInfoDto,
-    ): String {
+    private fun userDrinkPickAdapterButtonOnClick(userSnackInfoDto: UserSnackInfoDto,): String {
         return "b"
     }
 

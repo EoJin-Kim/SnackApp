@@ -64,7 +64,6 @@ class PickShopFragment : Fragment() {
                 mainViewModel.selectSnackShop(foodShopInfo!!.id, drinkShopInfo!!.id)
                 shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
             }
-
         }
 
         binding.foodShopBtn.setOnClickListener {
