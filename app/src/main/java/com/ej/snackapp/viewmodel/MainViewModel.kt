@@ -19,19 +19,22 @@ class MainViewModel @Inject constructor(
     val foodShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
     val drinkShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
 
-    val foodShopDetailInfo = MutableLiveData<ShopDetailInfo>()
-    val drinkShopDetailInfo = MutableLiveData<ShopDetailInfo>()
+    val shopDetailInfo = MutableLiveData<ShopDetailInfo>()
 
     val shopUpdateCheck = MutableLiveData<String>()
 
     var foodShopId = 0L
+    var foodShopName = ""
     var drinkShopId = 0L
+    var drinkShopName = ""
 
     init {
         viewModelScope.launch {
-            val shopId = snackApi.getShopId().data!!
-            foodShopId = shopId.foodId
-            drinkShopId = shopId.drinkId
+            val shopInfo = snackApi.getShopId().data!!
+            foodShopId = shopInfo.foodId
+            foodShopName = shopInfo.foodShopName
+            drinkShopId = shopInfo.drinkId
+            drinkShopName = shopInfo.drinkShopName
         }
     }
 
@@ -61,15 +64,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun fetchFoodShopMenuInfo(){
+    fun fetchShopMenuInfo(snackType: SnackType){
         viewModelScope.launch {
-            foodShopDetailInfo.value = snackApi.getFoodShopDetailInfo(foodShopId).data!!
+            shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,foodShopId).data!!
         }
     }
 
-    fun fetchDrinkShopMenuInfo(){
+    fun selectSnack(){
         viewModelScope.launch {
-            drinkShopDetailInfo.value = snackApi.getDrinkShopDetailInfo(foodShopId).data!!
+//            snackApi.setMemberSnack().data!!
         }
     }
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ej.snackapp.*
@@ -27,9 +28,9 @@ import kotlin.concurrent.thread
 class PickSnackFragment : Fragment() {
 
     lateinit var binding: FragmentPickSnackBinding
-
     val act by lazy { activity as MainActivity }
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,12 +109,6 @@ class PickSnackFragment : Fragment() {
         }
     }
 
-    private fun createSnackPickAdapter(snackType: SnackType): SnackPickAdapter {
-        val funVal: (String) -> Unit = { str -> dialogPickSnackOnClick(str) }
-        val snackPickAdapter = SnackPickAdapter(funVal)
-        return snackPickAdapter
-    }
-
     private fun createUserPickAdapter(): UserPickAdapter {
         val funSnackBtn: (SnackType) -> Unit = { snackType -> createSnackPickDialog(snackType) }
         val userPickAdapter = UserPickAdapter(funSnackBtn)
@@ -129,17 +124,8 @@ class PickSnackFragment : Fragment() {
 
     private fun dialogPickSnackOnClick(snackName: String) {
         Log.d("onclick", snackName)
+        mainViewModel
+
+
     }
-
-
-    // 사용자가 간식 선택 버튼 클릭 시
-    private fun userFoodPickAdapterButtonOnClick(userSnackInfoDto: UserSnackInfoDto): String {
-        return "a"
-    }
-
-
-    private fun userDrinkPickAdapterButtonOnClick(userSnackInfoDto: UserSnackInfoDto,): String {
-        return "b"
-    }
-
 }

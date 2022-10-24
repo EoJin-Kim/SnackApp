@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentResultSnackBinding
 import com.ej.snackapp.viewmodel.MainViewModel
@@ -16,7 +16,7 @@ class ResultSnackFragment : Fragment() {
     lateinit var binding : FragmentResultSnackBinding
 
     val act by lazy { activity as MainActivity }
-    private val mainViewModel : MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,8 +33,8 @@ class ResultSnackFragment : Fragment() {
         val drinkResultSb =StringBuilder()
         getResultSnack(foodResultSb,drinkResultSb)
 
-        binding.foodType.text = mainViewModel.foodShopDetailInfo.value!!.shopName
-        binding.drinkType.text = mainViewModel.foodShopDetailInfo.value!!.shopName
+        binding.foodType.text = mainViewModel.shopDetailInfo.value!!.shopName
+        binding.drinkType.text = mainViewModel.shopDetailInfo.value!!.shopName
 
         binding.foodResult.setText(foodResultSb.toString())
         binding.drinkResult.setText(drinkResultSb.toString())

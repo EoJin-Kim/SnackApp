@@ -4,10 +4,8 @@ import com.ej.snackapp.dto.*
 import com.ej.snackapp.dto.response.ApiResponse
 import com.ej.snackapp.dto.response.ShopIdDto
 import com.ej.snackapp.dto.ShopDetailInfo
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import com.ej.snackapp.dto.request.MemberPickDto
+import retrofit2.http.*
 
 interface SnackApi {
     companion object{
@@ -29,10 +27,10 @@ interface SnackApi {
     @PUT("${firstUrl}/snack/snackshop")
     suspend fun updateSnackShop(@Body snackShopDto: SnackShopDto): ApiResponse<String>
 
-    @PUT("${firstUrl}/shop/FOOD/{shopId}")
-    suspend fun getFoodShopDetailInfo(@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
+    @GET("${firstUrl}/shop/{snackType}/{shopId}")
+    suspend fun getShopDetailInfo(@Path("snackType") snackType: SnackType,@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
 
-    @PUT("${firstUrl}/shop/DRINK/{shopId}")
-    suspend fun getDrinkShopDetailInfo(@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
+    @POST("${firstUrl}/shop/{snackType}/{shopId}")
+    suspend fun setMemberSnack(@Body memberPickDto : MemberPickDto):ApiResponse<MemberPickDto>
 
 }

@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ej.snackapp.MainActivity
@@ -21,7 +22,7 @@ class ShopSelectFragmentDialog(
     private val snackType: SnackType,
 ) : DialogFragment() {
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by activityViewModels()
     val act by lazy { activity as MainActivity }
 
     lateinit var binding: FragmentShopSelectDialogBinding

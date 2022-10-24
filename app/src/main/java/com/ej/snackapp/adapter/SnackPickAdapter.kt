@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
+import dagger.hilt.android.AndroidEntryPoint
+
 
 class SnackPickAdapter (private val onClick: (String) -> Unit)
     : ListAdapter<String, SnackPickAdapter.SnackPickViewHolder>(SnackPickDiffCallback){
-
-
-
     class SnackPickViewHolder(
         itemView : View,
         val onClick: (String) -> Unit,

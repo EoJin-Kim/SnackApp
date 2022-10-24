@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ej.snackapp.MainActivity
@@ -21,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SnackFragment : Fragment() {
     lateinit var snackFragmentBinding : FragmentSnackBinding
 
-    private val mainViewModel : MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by activityViewModels()
 
     val act by lazy{activity as MainActivity}
 
