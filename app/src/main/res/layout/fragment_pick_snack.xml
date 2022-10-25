@@ -6,28 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/main_background"
     android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context=".fragment.snack.tab.PickSnackFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
 
     <AutoCompleteTextView
         android:id="@+id/name_input"
         android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:layout_margin="20dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/white_edge"
-        android:elevation="3dp"
+        android:elevation="4dp"
         android:hint="이름을 입력해주세요"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="20sp" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="40dp"
         android:background="@color/black">
 
     </FrameLayout>
@@ -35,7 +35,8 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/snack_swipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -50,7 +51,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pick_snack_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/snack_pick_row" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

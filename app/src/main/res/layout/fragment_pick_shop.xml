@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background"
-    android:elevation="3dp"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="40dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="32dp"
     tools:context=".fragment.snack.tab.PickShopFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -15,50 +17,54 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
         android:background="@color/main_background"
-        android:padding="20dp"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="24dp"
+                android:paddingBottom="28dp"
                 android:text="선택한 간식 가게"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="26sp" />
 
             <TextView
                 android:id="@+id/selectFood"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
                 android:gravity="center"
+                android:paddingBottom="32dp"
                 android:text="간식"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/main_pink"
-                android:textSize="34sp"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/food_shop_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/white_pink_edge"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/purple_pink_edge"
                 android:elevation="3dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
                 android:text="간식 가게 선택"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/main_white"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -67,8 +73,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
+        android:layout_marginTop="36dp"
         android:background="@color/main_background"
         app:cardCornerRadius="20dp">
 
@@ -76,23 +81,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:paddingTop="24dp"
+                android:paddingBottom="28dp"
                 android:text="선택한 음료 가게"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="26sp" />
 
             <TextView
                 android:id="@+id/selectDrink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
                 android:gravity="center"
+                android:paddingBottom="32dp"
                 android:text="음료"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -104,12 +112,15 @@
                 android:id="@+id/drink_shop_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/white_pink_edge"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/purple_pink_edge"
                 android:elevation="3dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
                 android:text="음료 가게 선택"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/main_white"
+                android:textSize="32sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -117,9 +128,8 @@
     <Button
         android:id="@+id/shop_complete_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="0.5"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:background="@drawable/pink_edge"
         android:text="가게 선택 완료"
         android:textColor="@color/main_white"
