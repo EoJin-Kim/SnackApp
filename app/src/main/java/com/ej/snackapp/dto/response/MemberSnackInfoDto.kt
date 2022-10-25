@@ -1,10 +1,11 @@
 package com.ej.snackapp.dto.response
 
-data class MemberPickResultDto(
+data class MemberSnackInfoDto (
+
     var id : Long,
     var name : String,
     var food : String,
-    var drink:String,
+    var drink : String,
     var foodOption : String,
-    var drinkOption :String,
+    var drinkOption : String,
 )

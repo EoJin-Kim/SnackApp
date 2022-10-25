@@ -11,14 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ej.snackapp.*
-import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.adapter.UserPickAdapter
 import com.ej.snackapp.databinding.FragmentPickSnackBinding
-import com.ej.snackapp.dto.SnackType
-import com.ej.snackapp.dto.UserSnackInfoDto
+import com.ej.snackapp.enums.SnackType
+import com.ej.snackapp.dto.response.MemberSnackInfoDto
 import com.ej.snackapp.fragment.dialog.SnackSelectFragmentDialog
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +64,6 @@ class PickSnackFragment : Fragment() {
             adapter = userPickAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
         mainViewModel.fetchUserPickInfo()
     }
 
@@ -80,15 +77,15 @@ class PickSnackFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 thread {
-                    val filterUserSnackInfoDtoList = ArrayList<UserSnackInfoDto>()
+                    val filterMemberSnackInfoDtoList = mutableListOf<MemberSnackInfoDto>()
                     for (userinfo in mainViewModel.userPickInfo?.value!!) {
 
                         if (userinfo.name.contains(s.toString())) {
                             Log.d("test", "after : ${userinfo.name}")
-                            filterUserSnackInfoDtoList.add(userinfo)
+                            filterMemberSnackInfoDtoList.add(userinfo)
                         }
                     }
-                    act.filterUserSnackInfoDtoList.postValue(filterUserSnackInfoDtoList)
+                    // 필터링된 filterMemberSnackInfoDtoList adapter에 submit
                 }
             }
         }
@@ -110,22 +107,26 @@ class PickSnackFragment : Fragment() {
     }
 
     private fun createUserPickAdapter(): UserPickAdapter {
-        val funSnackBtn: (SnackType) -> Unit = { snackType -> createSnackPickDialog(snackType) }
+        val funSnackBtn: (MemberSnackInfoDto, SnackType) -> Unit = { userSnackInfoDto, snackType -> createSnackPickDialog(userSnackInfoDto,snackType) }
         val userPickAdapter = UserPickAdapter(funSnackBtn)
         return userPickAdapter
     }
 
-    private fun createSnackPickDialog(snackType:SnackType) {
-        val funPickSnackVal : (String) -> Unit = { snack -> dialogPickSnackOnClick(snack)}
-        val dialog : SnackSelectFragmentDialog = SnackSelectFragmentDialog.newInstance(funPickSnackVal,snackType)
+    private fun createSnackPickDialog(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType) {
+        val funPickSnackVal : (MemberSnackInfoDto, SnackType, String) -> Unit = { userSnackInfoDto, snackType, snack -> dialogPickSnackOnClick(userSnackInfoDto,snackType,snack)}
+        val dialog : SnackSelectFragmentDialog = SnackSelectFragmentDialog.newInstance(funPickSnackVal,memberSnackInfoDto,snackType)
 
         dialog.show(act.supportFragmentManager,"가게 선택")
     }
 
-    private fun dialogPickSnackOnClick(snackName: String) {
-        Log.d("onclick", snackName)
-        mainViewModel
+    private fun dialogPickSnackOnClick(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType, snackName: String) {
+        Log.d("selectSnack", "${memberSnackInfoDto}")
+        Log.d("selectSnack", "${snackType}")
+        Log.d("selectSnack", "${snackName}")
+        mainViewModel.selectSnack(memberSnackInfoDto,snackType,snackName)
+    }
 
-
+    companion object{
+        fun newInstance() = PickSnackFragment()
     }
 }

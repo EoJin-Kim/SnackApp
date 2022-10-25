@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.adapter.ShopPickAdapter
 import com.ej.snackapp.databinding.FragmentShopSelectDialogBinding
-import com.ej.snackapp.dto.ShopInfoDto
-import com.ej.snackapp.dto.SnackType
+import com.ej.snackapp.dto.response.ShopInfoDto
+import com.ej.snackapp.enums.SnackType
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

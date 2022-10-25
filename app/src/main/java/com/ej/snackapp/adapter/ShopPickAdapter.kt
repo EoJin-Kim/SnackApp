@@ -8,18 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.snackapp.R
-import com.ej.snackapp.dto.ShopInfoDto
-import com.ej.snackapp.dto.SnackType
+import com.ej.snackapp.dto.response.ShopInfoDto
+import com.ej.snackapp.enums.SnackType
 
 class ShopPickAdapter(
-    private val onClick: (ShopInfoDto,SnackType) -> Unit,
+    private val onClick: (ShopInfoDto, SnackType) -> Unit,
     private val snackType: SnackType,
 )
     : ListAdapter<ShopInfoDto, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
 
     class ShopPickViewHolder(
         itemView : View,
-        val onClick: (ShopInfoDto,SnackType) -> Unit,
+        val onClick: (ShopInfoDto, SnackType) -> Unit,
         val snackType: SnackType,
     ) : RecyclerView.ViewHolder(itemView){
 

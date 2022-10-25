@@ -1,4 +1,4 @@
-package com.ej.snackapp.dto
+package com.ej.snackapp.dto.response
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

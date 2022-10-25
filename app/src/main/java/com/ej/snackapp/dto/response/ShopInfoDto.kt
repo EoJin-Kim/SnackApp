@@ -1,4 +1,4 @@
-package com.ej.snackapp.dto
+package com.ej.snackapp.dto.response
 
 data class ShopInfoDto(
     var id:Long,

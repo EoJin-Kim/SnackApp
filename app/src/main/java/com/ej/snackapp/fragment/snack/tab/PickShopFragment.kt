@@ -1,7 +1,6 @@
 package com.ej.snackapp.fragment.snack.tab
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentPickShopBinding
-import com.ej.snackapp.dto.ShopInfoDto
-import com.ej.snackapp.dto.SnackType
+import com.ej.snackapp.dto.response.ShopInfoDto
+import com.ej.snackapp.enums.SnackType
 import com.ej.snackapp.fragment.dialog.ShopSelectFragmentDialog
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,21 +78,25 @@ class PickShopFragment : Fragment() {
     private fun createShopPickDialog(
         snackType: SnackType
     ) {
-        val funPickShopVal : (ShopInfoDto,SnackType) -> Unit = { shopInfoDto,snackType -> dialogPickShop(shopInfoDto,snackType)}
+        val funPickShopVal : (ShopInfoDto, SnackType) -> Unit = { shopInfoDto, snackType -> dialogPickShop(shopInfoDto,snackType)}
         val dialog : ShopSelectFragmentDialog = ShopSelectFragmentDialog.newInstance(funPickShopVal,snackType)
 
         dialog.show(act.supportFragmentManager,"가게 선택")
     }
 
-    private fun dialogPickShop(shopInfoDto:ShopInfoDto,snackType: SnackType) {
-        if(snackType==SnackType.FOOD){
+    private fun dialogPickShop(shopInfoDto: ShopInfoDto, snackType: SnackType) {
+        if(snackType== SnackType.FOOD){
             foodShopInfo = shopInfoDto
             nowFoodTextView.text = shopInfoDto.shopName
         }
-        else if(snackType==SnackType.DRINK){
+        else if(snackType== SnackType.DRINK){
             drinkShopInfo = shopInfoDto
             nowDrinkTextView.text = shopInfoDto.shopName
         }
+    }
+
+    companion object{
+        fun newInstance() = PickShopFragment()
     }
 
 }

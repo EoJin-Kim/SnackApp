@@ -1,4 +1,4 @@
-package com.ej.snackapp.dto
+package com.ej.snackapp.enums
 
 enum class ResponseStatus {
     SUCCESS,FALID

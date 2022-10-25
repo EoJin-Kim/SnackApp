@@ -26,16 +26,11 @@ class SnackFragment : Fragment() {
 
     val act by lazy{activity as MainActivity}
 
-    val pickSnackFragment = PickSnackFragment()
-    val resultSnackFragment = ResultSnackFragment()
-    val pickShopFragment = PickShopFragment()
+    val pickSnackFragment = PickSnackFragment.newInstance()
+    val resultSnackFragment = ResultSnackFragment.newInstance()
+    val pickShopFragment = PickShopFragment.newInstance()
     val fragList = arrayOf(pickSnackFragment, resultSnackFragment, pickShopFragment)
     val tabNameList = arrayOf("Today Snack", "Result Snack", "Pick Shop")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -1,10 +1,9 @@
 package com.ej.snackapp.api
 
-import com.ej.snackapp.dto.*
-import com.ej.snackapp.dto.response.ApiResponse
-import com.ej.snackapp.dto.response.ShopIdDto
-import com.ej.snackapp.dto.ShopDetailInfo
 import com.ej.snackapp.dto.request.MemberPickDto
+import com.ej.snackapp.dto.request.SnackShopDto
+import com.ej.snackapp.dto.response.*
+import com.ej.snackapp.enums.SnackType
 import retrofit2.http.*
 
 interface SnackApi {
@@ -16,7 +15,7 @@ interface SnackApi {
     suspend fun getShopId() : ApiResponse<ShopIdDto>
 
     @GET("${firstUrl}/snack/pick")
-    suspend fun getUserPickInfo() : ApiResponse<MutableList<UserSnackInfoDto>>
+    suspend fun getUserPickInfo() : ApiResponse<MutableList<MemberSnackInfoDto>>
 
     @GET("${firstUrl}/shop/{snackType}")
     suspend fun getShopInfo(@Path("snackType") snackType: SnackType): ApiResponse<MutableList<ShopInfoDto>>
@@ -28,9 +27,9 @@ interface SnackApi {
     suspend fun updateSnackShop(@Body snackShopDto: SnackShopDto): ApiResponse<String>
 
     @GET("${firstUrl}/shop/{snackType}/{shopId}")
-    suspend fun getShopDetailInfo(@Path("snackType") snackType: SnackType,@Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
+    suspend fun getShopDetailInfo(@Path("snackType") snackType: SnackType, @Path("shopId") shopId: Long):ApiResponse<ShopDetailInfo>
 
-    @POST("${firstUrl}/shop/{snackType}/{shopId}")
-    suspend fun setMemberSnack(@Body memberPickDto : MemberPickDto):ApiResponse<MemberPickDto>
+    @POST("${firstUrl}/snack/pick")
+    suspend fun setMemberSnack(@Body memberPickDto : MemberPickDto):ApiResponse<MutableList<MemberSnackInfoDto>>
 
 }

@@ -10,13 +10,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ej.snackapp.adapter.SnackPickAdapter
 import com.ej.snackapp.databinding.FragmentSnackSelectDialogBinding
-import com.ej.snackapp.dto.SnackType
+import com.ej.snackapp.enums.SnackType
+import com.ej.snackapp.dto.response.MemberSnackInfoDto
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SnackSelectFragmentDialog(
-    private val pickSnackFun: (String) -> Unit,
+    private val confirmSnackFun: (MemberSnackInfoDto, SnackType, String) -> Unit,
+    private val memberSnackInfoDto: MemberSnackInfoDto,
     private val snackType: SnackType
 
 ) : DialogFragment() {
@@ -34,15 +36,16 @@ class SnackSelectFragmentDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(snackType==SnackType.FOOD){
+        if(snackType== SnackType.FOOD){
             binding.shopName.text = mainViewModel.foodShopName
         }
-        else if(snackType==SnackType.DRINK){
+        else if(snackType== SnackType.DRINK){
             binding.shopName.text = mainViewModel.drinkShopName
         }
 
         setRecycler()
         binding.choiceBtn.setOnClickListener {
+            confirmSnackFun(memberSnackInfoDto,snackType,binding.shopName.text.toString())
             dismiss()
         }
     }
@@ -73,12 +76,13 @@ class SnackSelectFragmentDialog(
     }
 
     private fun pickSnackDialogFun(snackName : String){
-        pickSnackFun(snackName)
         binding.selectSnack.text = snackName;
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(pickSnackFun: (String) -> Unit, snackType: SnackType) = SnackSelectFragmentDialog(pickSnackFun,snackType)
+        fun newInstance(pickSnackFun: (MemberSnackInfoDto, SnackType, String) -> Unit, memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType) : SnackSelectFragmentDialog {
+            return SnackSelectFragmentDialog(pickSnackFun,memberSnackInfoDto,snackType)
+        }
     }
 }

@@ -4,8 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ej.snackapp.api.SnackApi
-import com.ej.snackapp.dto.*
-import com.ej.snackapp.dto.ShopDetailInfo
+import com.ej.snackapp.dto.response.ShopDetailInfo
+import com.ej.snackapp.dto.request.MemberPickDto
+import com.ej.snackapp.dto.request.SnackShopDto
+import com.ej.snackapp.dto.response.MemberSnackInfoDto
+import com.ej.snackapp.dto.response.ShopInfoDto
+import com.ej.snackapp.enums.SnackType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +19,7 @@ class MainViewModel @Inject constructor(
     private val snackApi: SnackApi
 ) : ViewModel(){
 
-    val userPickInfo = MutableLiveData<MutableList<UserSnackInfoDto>>()
+    val userPickInfo = MutableLiveData<MutableList<MemberSnackInfoDto>>()
     val foodShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
     val drinkShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
 
@@ -70,9 +74,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun selectSnack(){
+    fun selectSnack(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType, snackName: String){
+        val memberPickDto = MemberPickDto(memberSnackInfoDto.id, snackType, snackName, "")
         viewModelScope.launch {
-//            snackApi.setMemberSnack().data!!
+            userPickInfo.value = snackApi.setMemberSnack(memberPickDto).data!!
         }
     }
 }

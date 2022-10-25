@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.ej.snackapp.MainActivity
 import com.ej.snackapp.databinding.FragmentResultSnackBinding
+import com.ej.snackapp.enums.SnackType
 import com.ej.snackapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,42 +28,46 @@ class ResultSnackFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        val foodResultSb =StringBuilder()
-        val drinkResultSb =StringBuilder()
-        getResultSnack(foodResultSb,drinkResultSb)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.foodType.text = mainViewModel.shopDetailInfo.value!!.shopName
-        binding.drinkType.text = mainViewModel.shopDetailInfo.value!!.shopName
-
-        binding.foodResult.setText(foodResultSb.toString())
-        binding.drinkResult.setText(drinkResultSb.toString())
+        mainViewModel.shopDetailInfo.observe(viewLifecycleOwner){
+            setUiData()
+        }
     }
 
-    fun getResultSnack(foodResultSb: StringBuilder, drinkResultSb : StringBuilder) {
+    private fun setUiData() {
+        binding.foodType.text = mainViewModel.foodShopName
+        binding.drinkType.text = mainViewModel.drinkShopName
+        binding.foodResult.setText(getResultSnack(SnackType.FOOD))
+        binding.drinkResult.setText(getResultSnack(SnackType.DRINK))
+    }
 
-        val foodMap: MutableMap<String,Int> = mutableMapOf()
-        val drinkMap: MutableMap<String,Int> = mutableMapOf()
+    fun getResultSnack(snackType: SnackType) :String{
+
+        val snackResultSb  = StringBuilder()
+        val snackMap: MutableMap<String,Int> = mutableMapOf()
         val userSnackInfoList = mainViewModel.userPickInfo.value
 
         for(userSnackInfo in userSnackInfoList!!){
-            val foodCnt = foodMap.getOrDefault(userSnackInfo.food,0)
-            foodMap.set(userSnackInfo.food,foodCnt+1)
-
-            val drinkCnt = drinkMap.getOrDefault(userSnackInfo.drink,0)
-            drinkMap.set(userSnackInfo.drink,drinkCnt+1)
+            var snackCnt = 0;
+            if (snackType == SnackType.FOOD) {
+                snackCnt = snackMap.getOrDefault(userSnackInfo.food,0)
+                snackMap.set(userSnackInfo.food,snackCnt+1)
+            }
+            else if (snackType == SnackType.DRINK) {
+                snackCnt = snackMap.getOrDefault(userSnackInfo.drink,0)
+                snackMap.set(userSnackInfo.drink,snackCnt+1)
+            }
         }
-        foodMap.forEach { food, count ->
-            if(food=="" || food =="간식 선택") return@forEach
-            foodResultSb.append("${food} : ${count}개\n")
+        snackMap.forEach { snack, count ->
+            if(snack=="" || snack =="간식 선택") return@forEach
+            snackResultSb.append("${snack} : ${count}개\n")
         }
-
-        drinkMap.forEach{ drink, count ->
-            if(drink=="" || drink == "간식 선택") return@forEach
-            drinkResultSb.append("${drink} : ${count}개\n")
-        }
-
+        return snackResultSb.toString()
     }
 
+    companion object{
+        fun newInstance() = ResultSnackFragment()
+    }
 }
