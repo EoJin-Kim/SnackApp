@@ -21,9 +21,7 @@ class SnackPickAdapter (private val onClick: (String) -> Unit)
         private var snackName: String? = null
         init{
             itemView.setOnClickListener {
-                snackName?.let {
-                    onClick(it)
-                }
+                onClick(snackName!!)
             }
         }
 

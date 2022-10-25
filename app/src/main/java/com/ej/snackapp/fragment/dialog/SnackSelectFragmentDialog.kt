@@ -45,7 +45,7 @@ class SnackSelectFragmentDialog(
 
         setRecycler()
         binding.choiceBtn.setOnClickListener {
-            confirmSnackFun(memberSnackInfoDto,snackType,binding.shopName.text.toString())
+            confirmSnackFun(memberSnackInfoDto,snackType,binding.selectSnack.text.toString())
             dismiss()
         }
     }

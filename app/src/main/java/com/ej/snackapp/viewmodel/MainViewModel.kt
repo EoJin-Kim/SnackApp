@@ -60,17 +60,27 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun selectSnackShop(foodShopId: Long, drinkShopId: Long) {
+    fun selectSnackShop(foodShop: ShopInfoDto, drinkShop: ShopInfoDto) {
         viewModelScope.launch {
-            shopUpdateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShopId,drinkShopId)).data!!
-            this@MainViewModel.foodShopId = foodShopId
-            this@MainViewModel.drinkShopId = drinkShopId
+            shopUpdateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShop.id,drinkShop.id)).data!!
+            this@MainViewModel.foodShopId = foodShop.id
+            this@MainViewModel.foodShopName = foodShop.shopName
+            this@MainViewModel.drinkShopId = drinkShop.id
+            this@MainViewModel.drinkShopName = drinkShop.shopName
+
+            fetchUserPickInfo()
+
         }
     }
 
     fun fetchShopMenuInfo(snackType: SnackType){
         viewModelScope.launch {
-            shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,foodShopId).data!!
+            if(snackType==SnackType.FOOD){
+                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,foodShopId).data!!
+            }
+            else if(snackType==SnackType.DRINK){
+                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,drinkShopId).data!!
+            }
         }
     }
 

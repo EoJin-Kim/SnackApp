@@ -56,7 +56,7 @@ class UserPickAdapter(
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserPickViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.snack_pick_row,parent,false)
+            .inflate(R.layout.row_snack_pick,parent,false)
         val holder = UserPickViewHolder(view,onClick)
         return holder
     }

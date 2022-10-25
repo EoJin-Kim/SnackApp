@@ -61,7 +61,7 @@ class PickShopFragment : Fragment() {
                 shopSelectAlert("가게를 선택해주세요", "간식과 음료 가게를 선택 해주세요!!", "확인")
             }
             else{
-                mainViewModel.selectSnackShop(foodShopInfo!!.id, drinkShopInfo!!.id)
+                mainViewModel.selectSnackShop(foodShopInfo!!,drinkShopInfo!!)
                 shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
             }
         }
