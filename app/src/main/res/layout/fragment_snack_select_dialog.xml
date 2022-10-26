@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/main_white"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_border"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/shop_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_pink"
+        android:background="@drawable/pink_edge_top"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="가게 이름"
@@ -35,8 +35,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_weight="0"
+        android:layout_height="300dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
@@ -59,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="36dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/pink_edge"
@@ -68,4 +68,5 @@
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold" />
+
 </LinearLayout>

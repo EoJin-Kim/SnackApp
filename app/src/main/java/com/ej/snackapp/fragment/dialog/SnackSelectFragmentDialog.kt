@@ -1,10 +1,9 @@
 package com.ej.snackapp.fragment.dialog
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +30,11 @@ class SnackSelectFragmentDialog(
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentSnackSelectDialogBinding.inflate(inflater)
+
+        // dialog 모서리 둥글게
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
         return binding.root
     }
 
