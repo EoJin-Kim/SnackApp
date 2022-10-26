@@ -17,16 +17,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val snackApi: SnackApi
-) : ViewModel(){
+) : ViewModel() {
 
     val userPickInfo = MutableLiveData<MutableList<MemberSnackInfoDto>>()
     val foodShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
     val drinkShopInfo = MutableLiveData<MutableList<ShopInfoDto>>()
-
     val shopDetailInfo = MutableLiveData<ShopDetailInfo>()
-
     val shopUpdateCheck = MutableLiveData<String>()
-
     var foodShopId = 0L
     var foodShopName = ""
     var drinkShopId = 0L
@@ -42,19 +39,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun fetchUserPickInfo(){
-        viewModelScope.launch{
+    fun fetchUserPickInfo() {
+        viewModelScope.launch {
             val userSnackInfoResult = snackApi.getUserPickInfo()
             userPickInfo.value = userSnackInfoResult.data!!
         }
     }
 
-    fun fetchShopInfo(snackType: SnackType){
+    fun fetchShopInfo(snackType: SnackType) {
         viewModelScope.launch {
-            if(snackType.equals(SnackType.FOOD)){
+            if (snackType.equals(SnackType.FOOD)) {
                 foodShopInfo.value = snackApi.getShopInfo(snackType).data!!
-            }
-            else if(snackType.equals(SnackType.DRINK)){
+            } else if (snackType.equals(SnackType.DRINK)) {
                 drinkShopInfo.value = snackApi.getShopInfo(snackType).data!!
             }
         }
@@ -62,29 +58,31 @@ class MainViewModel @Inject constructor(
 
     fun selectSnackShop(foodShop: ShopInfoDto, drinkShop: ShopInfoDto) {
         viewModelScope.launch {
-            shopUpdateCheck.value = snackApi.updateSnackShop(SnackShopDto(foodShop.id,drinkShop.id)).data!!
+            shopUpdateCheck.value =
+                snackApi.updateSnackShop(SnackShopDto(foodShop.id, drinkShop.id)).data!!
             this@MainViewModel.foodShopId = foodShop.id
             this@MainViewModel.foodShopName = foodShop.shopName
             this@MainViewModel.drinkShopId = drinkShop.id
             this@MainViewModel.drinkShopName = drinkShop.shopName
-
             fetchUserPickInfo()
-
         }
     }
 
-    fun fetchShopMenuInfo(snackType: SnackType){
+    fun fetchShopMenuInfo(snackType: SnackType) {
         viewModelScope.launch {
-            if(snackType==SnackType.FOOD){
-                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,foodShopId).data!!
-            }
-            else if(snackType==SnackType.DRINK){
-                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType,drinkShopId).data!!
+            if (snackType == SnackType.FOOD) {
+                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType, foodShopId).data!!
+            } else if (snackType == SnackType.DRINK) {
+                shopDetailInfo.value = snackApi.getShopDetailInfo(snackType, drinkShopId).data!!
             }
         }
     }
 
-    fun selectSnack(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType, snackName: String){
+    fun selectSnack(
+        memberSnackInfoDto: MemberSnackInfoDto,
+        snackType: SnackType,
+        snackName: String
+    ) {
         val memberPickDto = MemberPickDto(memberSnackInfoDto.id, snackType, snackName, "")
         viewModelScope.launch {
             userPickInfo.value = snackApi.setMemberSnack(memberPickDto).data!!

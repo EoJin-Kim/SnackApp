@@ -60,7 +60,6 @@ class UserPickAdapter(
         val holder = UserPickViewHolder(view,onClick)
         return holder
     }
-
     override fun onBindViewHolder(holder: UserPickViewHolder, position: Int) {
         val userSnackInfo = getItem(position)
         holder.bind(userSnackInfo)
@@ -71,12 +70,7 @@ object UserPickDiffCallback : DiffUtil.ItemCallback<MemberSnackInfoDto>(){
     override fun areItemsTheSame(oldItem: MemberSnackInfoDto, newItem: MemberSnackInfoDto): Boolean {
         return oldItem == newItem
     }
-
     override fun areContentsTheSame(oldItem: MemberSnackInfoDto, newItem: MemberSnackInfoDto): Boolean {
-        return oldItem.id == newItem.id &&
-                oldItem.food == newItem.food &&
-                oldItem.drink== newItem.drink &&
-                oldItem.drinkOption == newItem.drinkOption &&
-                oldItem.foodOption == newItem.foodOption
+        return oldItem.equals(newItem)
     }
 }

@@ -14,8 +14,7 @@ import com.ej.snackapp.enums.SnackType
 class ShopPickAdapter(
     private val onClick: (ShopInfoDto, SnackType) -> Unit,
     private val snackType: SnackType,
-)
-    : ListAdapter<ShopInfoDto, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
+) : ListAdapter<ShopInfoDto, ShopPickAdapter.ShopPickViewHolder>(ShopPickDiffCallback){
 
     class ShopPickViewHolder(
         itemView : View,
@@ -31,34 +30,27 @@ class ShopPickAdapter(
                 onClick(shopInfo!!,snackType)
             }
         }
-
         fun bind(shopInfo : ShopInfoDto){
             this.shopInfo = shopInfo
             shopNameTextView.text = shopInfo.shopName
         }
 
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopPickViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_row, parent, false)
         return ShopPickAdapter.ShopPickViewHolder(view, onClick,snackType)
     }
-
     override fun onBindViewHolder(holder: ShopPickViewHolder, position: Int) {
         val shopInfo = getItem(position)
         holder.bind(shopInfo)
     }
 }
-
-
 object ShopPickDiffCallback : DiffUtil.ItemCallback<ShopInfoDto>(){
     override fun areItemsTheSame(oldItem: ShopInfoDto, newItem: ShopInfoDto): Boolean {
         return oldItem == newItem
     }
-
-
     override fun areContentsTheSame(oldItem: ShopInfoDto, newItem: ShopInfoDto): Boolean {
-        return oldItem.shopName == newItem.shopName
+        return oldItem.equals(newItem)
     }
 }

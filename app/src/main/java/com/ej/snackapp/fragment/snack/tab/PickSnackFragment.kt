@@ -27,8 +27,7 @@ class PickSnackFragment : Fragment() {
 
     lateinit var binding: FragmentPickSnackBinding
     val act by lazy { activity as MainActivity }
-    private val mainViewModel : MainViewModel by activityViewModels()
-
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -107,26 +106,39 @@ class PickSnackFragment : Fragment() {
     }
 
     private fun createUserPickAdapter(): UserPickAdapter {
-        val funSnackBtn: (MemberSnackInfoDto, SnackType) -> Unit = { userSnackInfoDto, snackType -> createSnackPickDialog(userSnackInfoDto,snackType) }
+        val funSnackBtn: (MemberSnackInfoDto, SnackType) -> Unit =
+            { userSnackInfoDto, snackType -> createSnackPickDialog(userSnackInfoDto, snackType) }
         val userPickAdapter = UserPickAdapter(funSnackBtn)
         return userPickAdapter
     }
 
-    private fun createSnackPickDialog(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType) {
-        val funPickSnackVal : (MemberSnackInfoDto, SnackType, String) -> Unit = { userSnackInfoDto, snackType, snack -> dialogPickSnackOnClick(userSnackInfoDto,snackType,snack)}
-        val dialog : SnackSelectFragmentDialog = SnackSelectFragmentDialog.newInstance(funPickSnackVal,memberSnackInfoDto,snackType)
-
-        dialog.show(act.supportFragmentManager,"가게 선택")
+    private fun createSnackPickDialog(
+        memberSnackInfoDto: MemberSnackInfoDto,
+        snackType: SnackType
+    ) {
+        val funPickSnackVal: (MemberSnackInfoDto, SnackType, String) -> Unit =
+            { userSnackInfoDto, snackType, snack ->
+                dialogPickSnackOnClick(
+                    userSnackInfoDto,
+                    snackType,
+                    snack
+                )
+            }
+        val dialog: SnackSelectFragmentDialog =
+            SnackSelectFragmentDialog.newInstance(funPickSnackVal, memberSnackInfoDto, snackType)
+        dialog.show(act.supportFragmentManager, "가게 선택")
     }
 
-    private fun dialogPickSnackOnClick(memberSnackInfoDto: MemberSnackInfoDto, snackType: SnackType, snackName: String) {
-        Log.d("selectSnack", "${memberSnackInfoDto}")
-        Log.d("selectSnack", "${snackType}")
-        Log.d("selectSnack", "${snackName}")
-        mainViewModel.selectSnack(memberSnackInfoDto,snackType,snackName)
+    private fun dialogPickSnackOnClick(
+        memberSnackInfoDto: MemberSnackInfoDto,
+        snackType: SnackType,
+        snackName: String
+    ) {
+        mainViewModel.selectSnack(memberSnackInfoDto, snackType, snackName)
     }
 
-    companion object{
+    companion object {
+        @JvmStatic
         fun newInstance() = PickSnackFragment()
     }
 }

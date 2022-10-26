@@ -8,5 +8,4 @@ data class ShopDetailInfo(
     var snackType : String,
     var menuURI:String,
     var snackList : MutableList<String>
-) {
-}
+)

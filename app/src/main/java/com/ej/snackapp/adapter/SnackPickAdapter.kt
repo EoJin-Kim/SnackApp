@@ -24,7 +24,6 @@ class SnackPickAdapter (private val onClick: (String) -> Unit)
                 onClick(snackName!!)
             }
         }
-
         fun bind(snackName : String){
             this.snackName = snackName
             snackNameTextView.text = snackName
@@ -36,7 +35,6 @@ class SnackPickAdapter (private val onClick: (String) -> Unit)
             .inflate(R.layout.list_row, parent, false)
         return SnackPickViewHolder(view, onClick)
     }
-
     override fun onBindViewHolder(holder: SnackPickViewHolder, position: Int) {
         val snackName = getItem(position)
         holder.bind(snackName)
@@ -47,8 +45,7 @@ object SnackPickDiffCallback : DiffUtil.ItemCallback<String>(){
     override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
         return oldItem == newItem
     }
-
     override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-        return oldItem == newItem
+        return oldItem.equals(newItem)
     }
 }

@@ -8,6 +8,4 @@ data class ApiResponse<T>(
     var status: ResponseStatus,
     @Json(name = "data")
     var data:T
-) {
-
-}
+)

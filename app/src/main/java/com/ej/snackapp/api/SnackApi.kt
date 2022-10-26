@@ -7,6 +7,7 @@ import com.ej.snackapp.enums.SnackType
 import retrofit2.http.*
 
 interface SnackApi {
+
     companion object{
         const val firstUrl ="/api"
     }

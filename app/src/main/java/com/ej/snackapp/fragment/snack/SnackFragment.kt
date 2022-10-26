@@ -20,12 +20,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SnackFragment : Fragment() {
+
     lateinit var snackFragmentBinding : FragmentSnackBinding
-
     private val mainViewModel : MainViewModel by activityViewModels()
-
     val act by lazy{activity as MainActivity}
-
     val pickSnackFragment = PickSnackFragment.newInstance()
     val resultSnackFragment = ResultSnackFragment.newInstance()
     val pickShopFragment = PickShopFragment.newInstance()
@@ -48,13 +46,10 @@ class SnackFragment : Fragment() {
             override fun getItemCount(): Int {
                 return fragList.size
             }
-
             override fun createFragment(position: Int): Fragment {
                 return fragList[position]
             }
         }
-
-
         snackFragmentBinding.pager2.adapter = tabAdapter
 
         // tab과 viewpager를 연결한다다
@@ -64,6 +59,5 @@ class SnackFragment : Fragment() {
         ) { tab: TabLayout.Tab, i: Int ->
             tab.text = tabNameList[i]
         }.attach()
-
     }
 }

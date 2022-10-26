@@ -23,7 +23,6 @@ class ShopSelectFragmentDialog(
 
     private val mainViewModel : MainViewModel by activityViewModels()
     val act by lazy { activity as MainActivity }
-
     lateinit var binding: FragmentShopSelectDialogBinding
 
     override fun onCreateView(
@@ -57,7 +56,6 @@ class ShopSelectFragmentDialog(
                     setDataForAdapter(snackShopPickAdapter, it)
                 }
             }
-
             fetchShopInfo(snackType)
         }
     }
@@ -80,7 +78,6 @@ class ShopSelectFragmentDialog(
 
     override fun onResume() {
         super.onResume()
-
         // dialog 넓이 80% 설정
         val params = dialog?.window?.attributes
         params?.width = resources.displayMetrics.widthPixels * 8 / 10

@@ -21,7 +21,7 @@ class PickShopFragment : Fragment() {
 
     lateinit var binding: FragmentPickShopBinding
 
-    private val mainViewModel : MainViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     val act by lazy { activity as MainActivity }
 
     lateinit var nowFoodTextView: TextView
@@ -57,11 +57,10 @@ class PickShopFragment : Fragment() {
 
         binding.shopCompleteBtn.setOnClickListener {
 
-            if (foodShopInfo==null || drinkShopInfo == null) {
+            if (foodShopInfo == null || drinkShopInfo == null) {
                 shopSelectAlert("가게를 선택해주세요", "간식과 음료 가게를 선택 해주세요!!", "확인")
-            }
-            else{
-                mainViewModel.selectSnackShop(foodShopInfo!!,drinkShopInfo!!)
+            } else {
+                mainViewModel.selectSnackShop(foodShopInfo!!, drinkShopInfo!!)
                 shopSelectAlert("가게선택 완료", "가게선택 완료!!", "확인!")
             }
         }
@@ -78,24 +77,26 @@ class PickShopFragment : Fragment() {
     private fun createShopPickDialog(
         snackType: SnackType
     ) {
-        val funPickShopVal : (ShopInfoDto, SnackType) -> Unit = { shopInfoDto, snackType -> dialogPickShop(shopInfoDto,snackType)}
-        val dialog : ShopSelectFragmentDialog = ShopSelectFragmentDialog.newInstance(funPickShopVal,snackType)
+        val funPickShopVal: (ShopInfoDto, SnackType) -> Unit =
+            { shopInfoDto, snackType -> dialogPickShop(shopInfoDto, snackType) }
+        val dialog: ShopSelectFragmentDialog =
+            ShopSelectFragmentDialog.newInstance(funPickShopVal, snackType)
 
-        dialog.show(act.supportFragmentManager,"가게 선택")
+        dialog.show(act.supportFragmentManager, "가게 선택")
     }
 
     private fun dialogPickShop(shopInfoDto: ShopInfoDto, snackType: SnackType) {
-        if(snackType== SnackType.FOOD){
+        if (snackType == SnackType.FOOD) {
             foodShopInfo = shopInfoDto
             nowFoodTextView.text = shopInfoDto.shopName
-        }
-        else if(snackType== SnackType.DRINK){
+        } else if (snackType == SnackType.DRINK) {
             drinkShopInfo = shopInfoDto
             nowDrinkTextView.text = shopInfoDto.shopName
         }
     }
 
-    companion object{
+    companion object {
+        @JvmStatic
         fun newInstance() = PickShopFragment()
     }
 
