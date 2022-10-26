@@ -8,12 +8,11 @@
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/alert_dialog.xml" value="0.33" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.33" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.18958333333333333" />
-        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.5" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_shop_select_dialog.xml" value="0.359375" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_snack.xml" value="0.38958333333333334" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/fragment_snack_select_dialog.xml" value="0.359375" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/list_row.xml" value="0.3605128205128205" />
-        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/row_snack_result.xml" value="0.3854166666666667" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/shop_pick_dialog.xml" value="0.3594871794871795" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/snack_list_row.xml" value="0.22708333333333333" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/layout/snack_pick_dialog.xml" value="0.3605128205128205" />
@@ -21,10 +20,13 @@
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/SnackApp/app/src/main/res/menu/bottom_menu.xml" value="0.5536458333333333" />
         <entry key="..\:/and/SnackApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.217" />
         <entry key="..\:/and/SnackApp/app/src/main/res/drawable/splash.xml" value="0.2955" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/drawable/white_edge.xml" value="0.1675" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/drawable/white_pink_edge.xml" value="0.1675" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.3" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.25" />
-        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.3" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_shop.xml" value="0.19196237708422403" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_pick_snack.xml" value="0.23385416666666667" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/fragment_result_snack.xml" value="0.33" />
+        <entry key="..\:/and/SnackApp/app/src/main/res/layout/row_snack_result.xml" value="0.67" />
         <entry key="..\:/and/SnackApp/app/src/main/res/layout/snack_pick_row.xml" value="0.2887179487179487" />
         <entry key="..\:/and/SnackApp/app/src/main/res/menu/bottom_menu.xml" value="0.2265625" />
       </map>

@@ -46,7 +46,26 @@ class ResultSnackFragment : Fragment() {
         binding.drinkType.text = mainViewModel.drinkShopName
         setSnackResultRecycler(SnackType.FOOD)
         setSnackResultRecycler(SnackType.DRINK)
+        setTotalResult()
 
+
+
+    }
+
+    private fun setTotalResult() {
+        val userPickInfoList = mainViewModel.userPickInfo.value!!
+        var foodCnt = 0;
+        var drinkCnt = 0;
+        for (memberSnackInfo in userPickInfoList) {
+            if(memberSnackInfo.food!=""){
+                foodCnt++;
+            }
+            if(memberSnackInfo.drink!=""){
+                drinkCnt++;
+            }
+        }
+        binding.foodTotalCount.text = "총 ${foodCnt}명 주문"
+        binding.drinkTotalCount.text = "총 ${drinkCnt}명 주문"
 
     }
 
