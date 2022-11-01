@@ -25,9 +25,9 @@ class MainViewModel @Inject constructor(
     val shopDetailInfo = MutableLiveData<ShopDetailInfo>()
     val shopUpdateCheck = MutableLiveData<String>()
     var foodShopId = 0L
-    var foodShopName = ""
+    var foodShopName:String? = ""
     var drinkShopId = 0L
-    var drinkShopName = ""
+    var drinkShopName:String? = ""
 
     init {
         viewModelScope.launch {
